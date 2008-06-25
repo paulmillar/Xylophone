@@ -19,5 +19,4 @@ is not required to use Xylophone.
 
 The XSLT style-sheets are made available under the terms and
 conditions described in the file Licence.txt and at the top of each
-XML file.  In essence, it is a two-clause BSD license.
-
+XSLT file.  In essence, it is a three-clause BSD license.
