@@ -42,12 +42,12 @@ LDIF (except for the preamble comments, which describes which
 processor was used), converting the Xylophone file example.xml into
 LDIF using xsltproc, xalan and saxon, respectively.
 
-  xsltproc ../xsl/xylophone.xsl example.xml
+  xsltproc ../xsl/xylophone.xsl hello-world.xml
 
-  xalan -xsl ../xsl/xylophone.xsl -in example.xml
+  xalan -xsl ../xsl/xylophone.xsl -in hello-world.xml
 
   java -classpath /usr/share/java/saxon.jar com.icl.saxon.StyleSheet \
-       example.xml ../xsl/xylophone.xsl
+       hello-world.xml ../xsl/xylophone.xsl
 
 The Xylophone file is a well-formed XML file that, in general terms,
 describes how the LDIF should look and how to construct the published
@@ -233,8 +233,8 @@ contents of example.xml.  Here's a simple example.xml file:
     </publish>
   </xylophone>
 
-(A copy of this file, with an additional comment, is available as
-hello-world.xml)
+A copy of this file, with an additional comment, is available as
+hello-world.xml (in the Documentation directory).
 
 The following invocation of xsltproc will use Xylophone to produce the
 corresponding LDIF:
