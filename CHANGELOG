@@ -1,3 +1,4 @@
 
 2008-07-17 Paul Millar <paul.millar@desy.de>
   Fix default attribute check.
+  Tidy up comments, indentation, error msgs.

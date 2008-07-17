@@ -111,7 +111,7 @@
       </xsl:when>
 
       <xsl:when test="@child='path'">
-	<!-- We have no default. -->
+	<!-- Our default is empty... -->
       </xsl:when>
 
       <xsl:otherwise>
@@ -138,14 +138,13 @@
 	  <xsl:with-param name="rel-path" select="$rel-path"/>
 	  
 	  <!-- Calculate the path from child elements -->
-	  <xsl:with-param name="path">
-	    <xsl:apply-templates mode='eval-attr'>
-	      <xsl:with-param name="rel-path" select="$rel-path"/>
-	      <xsl:with-param name="list-item" select="$list-item"/>
+          <xsl:with-param name="path">
+            <xsl:apply-templates mode="eval-attr">
+              <xsl:with-param name="rel-path" select="$rel-path"/>
+              <xsl:with-param name="list-item" select="$list-item"/>
 	    </xsl:apply-templates>
-	  </xsl:with-param>
-	</xsl:call-template>
-
+          </xsl:with-param>
+        </xsl:call-template>
       </xsl:when>
 
       <xsl:otherwise>
@@ -162,7 +161,7 @@
 
       <!-- Check we actually have a decent path defn. -->
       <xsl:when test="not(normalize-space($path))">
-	<xsl:message>Empty path found lookup element</xsl:message>
+	<xsl:message>Empty path found for lookup element, using default.</xsl:message>
 	<xsl:value-of select="$default-result"/>
       </xsl:when>
 
