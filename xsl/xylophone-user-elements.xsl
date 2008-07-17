@@ -99,7 +99,7 @@
   <!-- Figure out what our default should be -->
   <xsl:variable name="default-result">
     <xsl:choose>
-      <xsl:when test="@default">
+      <xsl:when test="count(@default) &gt; 0">
 	<xsl:value-of select="@default"/>
       </xsl:when>
 
