@@ -1,4 +1,7 @@
 
+2008-09-24 Paul Millar <paul.millar@desy.de>
+  Fix comments; add a time-stamp to output.
+
 2008-07-17 Paul Millar <paul.millar@desy.de>
   Fix default attribute check.
   Tidy up comments, indentation, error msgs.
