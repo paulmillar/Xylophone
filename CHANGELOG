@@ -2,6 +2,7 @@
 2008-09-25 Paul Millar <paul.millar@desy.de>
   Add support for numerical predicates.
   Allow more flexible allow/suppress combinations.
+  Add support for building new rel-path when conducting loops within loops.
 
 2008-09-24 Paul Millar <paul.millar@desy.de>
   Fix comments; add a time-stamp to output.

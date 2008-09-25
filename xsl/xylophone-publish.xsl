@@ -70,15 +70,24 @@
 	<xsl:message>Both "list" and "select" attributes are specified in object element; I will ignore list.</xsl:message>
       </xsl:if>
 
+      <!-- Compute an absolute path -->
+      <xsl:variable name="abs-path">
+	<xsl:call-template name="combine-paths">
+	  <xsl:with-param name="path" select="@select"/>
+	  <xsl:with-param name="rel-path" select="$rel-path"/>
+	</xsl:call-template>
+      </xsl:variable>
+
       <xsl:variable name="count">
 	<xsl:call-template name="count-path">
-	  <xsl:with-param name="path" select="@select"/>
+	  <xsl:with-param name="path" select="$abs-path"/>
 	</xsl:call-template>
       </xsl:variable>
 
       <xsl:call-template name="publish-multiple-select-objects">
 	<xsl:with-param name="count-todo" select="$count"/>
 	<xsl:with-param name="rel-path" select="$rel-path"/>
+	<xsl:with-param name="abs-path" select="$abs-path"/>
 	<xsl:with-param name="list-item" select="$list-item"/>
       </xsl:call-template>
 
@@ -147,6 +156,7 @@
     +-->
 <xsl:template name="publish-multiple-select-objects">
   <xsl:param name="rel-path"/>
+  <xsl:param name="abs-path"/>
   <xsl:param name="list-item"/>
   <xsl:param name="count-todo"/>
   <xsl:param name="count-done" select="'0'"/>
@@ -155,9 +165,7 @@
 
     <xsl:variable name="count-done-next" select="number($count-done)+1"/>
 
-    <xsl:variable name="this-obj-path" select="concat(@select,'[',$count-done-next,']')"/>
-
-    <!-- TODO: how do we combine multiple paths into a rel-path? -->
+    <xsl:variable name="this-obj-path" select="concat($abs-path,'[',$count-done-next,']')"/>
 
     <!-- Possibly publish this object -->
     <xsl:call-template name="maybe-publish-object-and-children"> 
@@ -167,9 +175,11 @@
 
     <!-- Iterate onto next item -->
     <xsl:call-template name="publish-multiple-select-objects">
-      <xsl:with-param name="count-done" select="$count-done-next"/>
-      <xsl:with-param name="count-todo" select="$count-todo"/>
+      <xsl:with-param name="rel-path" select="$rel-path"/>
+      <xsl:with-param name="abs-path" select="$abs-path"/>
       <xsl:with-param name="list-item" select="$list-item"/>
+      <xsl:with-param name="count-todo" select="$count-todo"/>
+      <xsl:with-param name="count-done" select="$count-done-next"/>
     </xsl:call-template>
 
   </xsl:if>
