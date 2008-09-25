@@ -67,8 +67,8 @@
   <xsl:variable name="this-should-expand">
     <xsl:choose>
 
-      <!-- The 'equals' check (the default) -->
-      <xsl:when test="@check = 'equals' or count(@check) = 0">
+      <!-- The 'is' check (the default) -->
+      <xsl:when test="@check = 'is' or count(@check) = 0">
 	<xsl:if test="count(@test) = 0">
 	  <xsl:message>Missing test attribute in <xsl:value-of select="name()"/> element.</xsl:message>
 	</xsl:if>
@@ -113,6 +113,68 @@
 
 	<xsl:value-of select="contains($data,@test)"/>	
       </xsl:when>
+
+
+      <!--+
+          |  Numerical tests
+          +-->
+
+      <!-- The 'less-than' check -->
+      <xsl:when test="@check = 'less-than'">
+	<xsl:if test="count(@test) = 0">
+	  <xsl:message>Missing test attribute in <xsl:value-of select="name()"/> element.</xsl:message>
+	</xsl:if>
+
+	<xsl:value-of select="number($data) &lt; number(@test)"/>
+      </xsl:when>
+
+      <!-- The 'less-than-or-equal' check -->
+      <xsl:when test="@check = 'less-than-or-equal'">
+	<xsl:if test="count(@test) = 0">
+	  <xsl:message>Missing test attribute in <xsl:value-of select="name()"/> element.</xsl:message>
+	</xsl:if>
+
+	<xsl:value-of select="number($data) &lt;= number(@test)"/>
+      </xsl:when>
+
+      <!-- The 'equal' check -->
+      <xsl:when test="@check = 'equal'">
+	<xsl:if test="count(@test) = 0">
+	  <xsl:message>Missing test attribute in <xsl:value-of select="name()"/> element.</xsl:message>
+	</xsl:if>
+
+	<xsl:value-of select="number($data) = number(@test)"/>
+      </xsl:when>
+
+      <!-- The 'not-equal' check -->
+      <xsl:when test="@check = 'not-equal'">
+	<xsl:if test="count(@test) = 0">
+	  <xsl:message>Missing test attribute in <xsl:value-of select="name()"/> element.</xsl:message>
+	</xsl:if>
+
+	<xsl:value-of select="not(number($data) = number(@test))"/>
+      </xsl:when>
+
+      <!-- The 'greater-than-or-equal' check -->
+      <xsl:when test="@check = 'greater-than-or-equal'">
+	<xsl:if test="count(@test) = 0">
+	  <xsl:message>Missing test attribute in <xsl:value-of select="name()"/> element.</xsl:message>
+	</xsl:if>
+
+	<xsl:value-of select="number($data) >= number(@test)"/>
+      </xsl:when>
+
+
+      <!-- The 'greater-than' check -->
+      <xsl:when test="@check = 'greater-than'">
+	<xsl:if test="count(@test) = 0">
+	  <xsl:message>Missing test attribute in <xsl:value-of select="name()"/> element.</xsl:message>
+	</xsl:if>
+
+	<xsl:value-of select="number($data) > number(@test)"/>
+      </xsl:when>
+
+
 
       <xsl:otherwise>
 	<xsl:message>Unknown mode attribute: <xsl:value-of select="@mode"/> in <xsl:value-of select="name()"/> element.</xsl:message>

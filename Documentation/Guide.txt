@@ -1445,10 +1445,13 @@ of any child LDAP objects.
 
 A suppress XML element must have a test XML attribute and may have a
 check XML attribute.  The check attribute, if specified, must be one
-of the following: 'equals', 'starts-with', 'ends-with' or 'contains'.
-If no check attribute is specified then 'equals' is assumed.  The
-check attribute describes how the compare the contents with the value
-contained as the test attribute: 'equals' requires both to be
+of the following: 'is', 'starts-with', 'ends-with', 'contains',
+'equal', 'not-equal', 'less-than', 'less-than-or-equal',
+'greater-than' or 'greater-than-or-equal'.  If no check attribute is
+specified then 'is' is assumed.
+
+The check attribute describes how to compare the contents with the
+value contained as the test attribute: 'is' requires both to be
 identical before the object is suppressed, 'starts-with' requires that
 the string is the same size as test attribute value or longer and that
 the first characters match, etc.
@@ -1456,10 +1459,19 @@ the first characters match, etc.
 Each of the following would result in the object being suppressed:
 
   <suppress test="beethoven">beethoven</suppress>
-  <suppress test="beethoven" check="equals">beethoven</suppress>
+  <suppress test="beethoven" check="is">beethoven</suppress>
   <suppress test="beet" check="starts-with">beethoven</suppress>
-  <suppress test="ven" check="ends-with">beethoven</suppress>
+  <suppress test="ven"  check="ends-with">beethoven</suppress>
   <suppress test="thov" check="contains">beethoven</suppress>
+
+Numerical checks may also be preformed.  The following suppress also
+
+  <suppress test="42" check="equal">42</suppress>
+  <suppress test="42" check="not-equal">23</suppress>
+  <suppress test="42" check="less-than">23</suppress>
+  <suppress test="23" check="less-than-or-equal">23</suppress>
+  <suppress test="23" check="greater-than">42</suppress>
+  <suppress test="23" check="greater-than-or-equal">42</suppress>
 
 This is perhaps most useful when evaluating a list, perhaps in
 combination with a map, and not all items on the list should be
