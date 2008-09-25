@@ -1,6 +1,7 @@
 
 2008-09-25 Paul Millar <paul.millar@desy.de>
   Add support for numerical predicates.
+  Allow more flexible allow/suppress combinations.
 
 2008-09-24 Paul Millar <paul.millar@desy.de>
   Fix comments; add a time-stamp to output.

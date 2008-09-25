@@ -224,32 +224,48 @@
   <xsl:param name="rel-path"/>
   <xsl:param name="list-item"/>
 
+  <xsl:variable name="have-suppress">
+    <xsl:apply-templates select="suppress" mode="eval-predicate">
+      <xsl:with-param name="rel-path" select="$rel-path"/>
+      <xsl:with-param name="list-item" select="$list-item"/>
+    </xsl:apply-templates>
+  </xsl:variable>
+
+
+  <xsl:variable name="have-allow">
+    <xsl:apply-templates select="allow" mode="eval-predicate">
+      <xsl:with-param name="rel-path" select="$rel-path"/>
+      <xsl:with-param name="list-item" select="$list-item"/>
+    </xsl:apply-templates>
+  </xsl:variable>
+
   <xsl:choose>
+
+    <!-- When we have explicit suppress / allow -->
+
+    <xsl:when test="normalize-space($have-suppress)">
+      <!-- Emit nothing, so suppressing output -->
+    </xsl:when>
+
+    <xsl:when test="normalize-space($have-allow)">
+      <!-- Always emit something, so allowing output -->
+      <xsl:text>PUBLISH</xsl:text>
+    </xsl:when>
+
+
+    <!-- When we fall back to default behaviour -->
+
     <xsl:when test="not(@select-mode) or @select-mode = 'default-allow'">
-      <xsl:variable name="should-suppress">
-	<xsl:apply-templates select="suppress" mode="eval-predicate">
-	  <xsl:with-param name="rel-path" select="$rel-path"/>
-	  <xsl:with-param name="list-item" select="$list-item"/>
-	</xsl:apply-templates>
-      </xsl:variable>
-      
-      <xsl:if test="not( normalize-space($should-suppress))">
-	<xsl:text>PUBLISH</xsl:text>
-      </xsl:if>
+      <!-- Default is to publish -->
+      <xsl:text>PUBLISH</xsl:text>
     </xsl:when>
 
     <xsl:when test="@select-mode = 'default-suppress'">
-      <xsl:variable name="should-allow">
-	<xsl:apply-templates select="allow" mode="eval-predicate">
-	  <xsl:with-param name="rel-path" select="$rel-path"/>
-	  <xsl:with-param name="list-item" select="$list-item"/>
-	</xsl:apply-templates>
-      </xsl:variable>
-      
-      <xsl:if test="normalize-space($should-allow)">
-	<xsl:text>PUBLISH</xsl:text>
-      </xsl:if>
+      <!-- Default is not to publish -->
     </xsl:when>
+
+
+    <!-- Catch broken configuration  -->
 
     <xsl:otherwise>
       <xsl:message>Unknown select-mode attribute "<xsl:value-of select="@select-mode"/>" in object; should be either "default-allow" (default) or "default-suppress"</xsl:message>
