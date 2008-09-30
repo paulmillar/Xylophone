@@ -56,11 +56,15 @@
     |  instances of the predicates and testing for non-zero-length expansion.
     +-->
 <xsl:template match="*" mode="eval-predicate">
-  <xsl:param name="rel-path"/>
+  <xsl:param name="path-stack"/>
 
   <xsl:variable name="data">
     <xsl:apply-templates select="*" mode="eval-attr">
-      <xsl:with-param name="rel-path" select="$rel-path"/>
+      <xsl:with-param name="rel-path">
+	<xsl:call-template name="path-stack-find-path">
+	  <xsl:with-param name="path-stack" select="$path-stack"/>
+	</xsl:call-template>
+      </xsl:with-param>
     </xsl:apply-templates>
   </xsl:variable>
 

@@ -1,3 +1,5 @@
+2008-09-30 Paul Millar <paul.millar@desy.de>
+  Add support for a path-stack, fixes loop-in-loop.
 
 2008-09-25 Paul Millar <paul.millar@desy.de>
   Add support for numerical predicates.
