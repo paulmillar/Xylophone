@@ -54,6 +54,7 @@
   <xsl:param name="path"/>
   <xsl:param name="rel-path"/>
 
+
   <!--+
       | Expand to either just $path or $combined-path, depending on whether $path
       | $path is absolute.
@@ -98,6 +99,7 @@
 </xsl:template>
 
 
+
 <!--+
     |  Add a new element to the path stack.  This template will expand
     |  to a new RTF with an item element for each path; for example
@@ -109,8 +111,7 @@
 <xsl:template name="path-stack-add">
   <xsl:param name="current-path-stack"/>
   <xsl:param name="path"/>
-
-  <xsl:variable name="depth" select="count(ancestor-or-self::object)"/>
+  <xsl:param name="depth" select="count(ancestor-or-self::object)"/>
 
   <xsl:apply-templates select="exsl:node-set($current-path-stack)/item"
 		       mode="path-stack-copy">

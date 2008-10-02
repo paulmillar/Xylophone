@@ -1,3 +1,6 @@
+2008-10-02 Paul Millar <paul.millar@desy.de>
+  Make depth a parameter to allow caller to override value.
+
 2008-09-30 Paul Millar <paul.millar@desy.de>
   Add support for a path-stack, fixes loop-in-loop.
 
