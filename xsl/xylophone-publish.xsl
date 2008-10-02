@@ -378,11 +378,7 @@
   <!-- Emit any object-local attributes -->
   <xsl:apply-templates select="attr" mode="publish">
     <xsl:with-param name="list-item" select="$list-item"/>
-    <xsl:with-param name="rel-path">
-      <xsl:call-template name="path-stack-find-path">
-	<xsl:with-param name="path-stack" select="$path-stack"/>
-      </xsl:call-template>
-    </xsl:with-param>
+    <xsl:with-param name="path-stack" select="$path-stack"/>
   </xsl:apply-templates>
 </xsl:template>
 
@@ -469,8 +465,9 @@
     |  in we loose the ability to calculate the object-depth.
     +-->
 <xsl:template match="attr" mode="publish">
+  <xsl:param name="depth" select="count(ancestor-or-self::object)"/>
+  <xsl:param name="path-stack"/>
   <xsl:param name="list-item"/>
-  <xsl:param name="rel-path"/>
 
   <xsl:if test="not(@hidden)">
 
@@ -491,7 +488,8 @@
 
 	<xsl:call-template name="publish-multiple-select-attr">
 	  <xsl:with-param name="count-todo" select="$count"/>
-	  <xsl:with-param name="rel-path" select="$rel-path"/>
+	  <xsl:with-param name="path-stack" select="$path-stack"/>
+	  <xsl:with-param name="depth" select="$depth"/>
 	  <xsl:with-param name="list-item" select="$list-item"/>
 	</xsl:call-template>
       </xsl:when>
@@ -506,7 +504,8 @@
 
 	  <xsl:otherwise>
 	    <xsl:call-template name="publish-multiple-list-attr">
-	      <xsl:with-param name="rel-path" select="$rel-path"/>
+	      <xsl:with-param name="path-stack" select="$path-stack"/>
+	      <xsl:with-param name="depth" select="$depth"/>
 	    </xsl:call-template>
 	  </xsl:otherwise>
 	</xsl:choose>
@@ -515,7 +514,8 @@
       <!-- Single attribute -->
       <xsl:otherwise>
 	<xsl:call-template name="publish-attr">
-	  <xsl:with-param name="rel-path" select="$rel-path"/>
+	  <xsl:with-param name="path-stack" select="$path-stack"/>
+	  <xsl:with-param name="depth" select="$depth"/>
 	  <xsl:with-param name="list-item" select="$list-item"/>
 	</xsl:call-template>
       </xsl:otherwise>
@@ -530,7 +530,8 @@
     |  iteration of this loop.
     +-->
 <xsl:template name="publish-multiple-select-attr">
-  <xsl:param name="rel-path"/>
+  <xsl:param name="depth" select="count(ancestor-or-self::object)"/>
+  <xsl:param name="path-stack"/>
   <xsl:param name="list-item"/>
   <xsl:param name="count-todo"/>
   <xsl:param name="count-done" select="'0'"/>
@@ -547,20 +548,32 @@
 	<xsl:with-param name="rel-path">
 	  <xsl:call-template name="path-stack-find-path">
 	    <xsl:with-param name="path-stack" select="$path-stack"/>
+	    <xsl:with-param name="depth" select="$depth"/>
 	  </xsl:call-template>
 	</xsl:with-param>
       </xsl:call-template>
     </xsl:variable>
 
+
     <!-- Possibly publish this object -->
     <xsl:call-template name="publish-attr"> 
-      <xsl:with-param name="rel-path" select="$this-attr-path"/>
       <xsl:with-param name="list-item" select="$list-item"/>
+
+      <xsl:with-param name="path-stack">
+	<xsl:call-template name="path-stack-add">
+	  <xsl:with-param name="current-path-stack" select="$path-stack"/>
+	  <xsl:with-param name="path" select="$this-attr-path"/>
+	  <xsl:with-param name="depth" select="$depth"/>
+	</xsl:call-template>
+      </xsl:with-param>
+
+      <xsl:with-param name="depth" select="$depth"/>
     </xsl:call-template>
 
     <!-- Iterate onto next item -->
     <xsl:call-template name="publish-multiple-select-attr">
-      <xsl:with-param name="rel-path" select="$rel-path"/>
+      <xsl:with-param name="path-stack" select="$path-stack"/>
+      <xsl:with-param name="depth" select="$depth"/>
       <xsl:with-param name="list-item" select="$list-item"/>
       <xsl:with-param name="count-done" select="$count-done-next"/>
       <xsl:with-param name="count-todo" select="$count-todo"/>
@@ -576,7 +589,8 @@
     |  Iterate over a list increasing count-done each time.
     +-->
 <xsl:template name="publish-multiple-list-attr">
-  <xsl:param name="rel-path"/>
+  <xsl:param name="depth" select="count(ancestor-or-self::object)"/>
+  <xsl:param name="path-stack"/>
   <xsl:param name="count-done" select="'0'"/>
 
   <xsl:variable name="count-todo" select="count(/xylophone/lists/list[@name=current()/@list]/item)"/>
@@ -587,13 +601,15 @@
 
     <!-- Possibly publish this object -->
     <xsl:call-template name="publish-attr"> 
-      <xsl:with-param name="rel-path" select="$rel-path"/>
+      <xsl:with-param name="path-stack" select="$path-stack"/>
+      <xsl:with-param name="depth" select="$depth"/>
       <xsl:with-param name="list-item" select="/xylophone/lists/list[@name=current()/@list]/item[$count-done-next]"/>
     </xsl:call-template>
 
     <!-- Iterate onto next item -->
     <xsl:call-template name="publish-multiple-list-attr">
-      <xsl:with-param name="rel-path" select="$rel-path"/>
+      <xsl:with-param name="path-stack" select="$path-stack"/>
+      <xsl:with-param name="depth" select="$depth"/>
       <xsl:with-param name="count-done" select="$count-done-next"/>
     </xsl:call-template>
   </xsl:if>  
@@ -605,14 +621,16 @@
     |  emit the text for a single attribute
     +-->
 <xsl:template name="publish-attr">
-  <xsl:param name="rel-path"/>
+  <xsl:param name="depth" select="count(ancestor-or-self::object)"/>
+  <xsl:param name="path-stack"/>
   <xsl:param name="list-item"/>
 
   <!-- Calculate the output variable -->
   <xsl:variable name="value">
-    <xsl:apply-templates select="." mode="eval-attr">
+    <xsl:apply-templates mode="eval-attr">
       <xsl:with-param name="list-item" select="$list-item"/>
-      <xsl:with-param name="rel-path" select="$rel-path"/>
+      <xsl:with-param name="path-stack" select="$path-stack"/>
+      <xsl:with-param name="depth" select="$depth"/>
     </xsl:apply-templates>
   </xsl:variable>
 
@@ -679,18 +697,14 @@
 
       <xsl:apply-templates select="/xylophone/classes/class[@name=substring-before($classes, ' ')]/attr" mode="publish">
 	<xsl:with-param name="list-item" select="$list-item"/>
-	<xsl:with-param name="rel-path">
-	  <xsl:call-template name="path-stack-find-path">
-	    <xsl:with-param name="path-stack" select="$path-stack"/>
-	  </xsl:call-template>
-	</xsl:with-param>
-
+	<xsl:with-param name="path-stack" select="$path-stack"/>
+	<xsl:with-param name="depth" select="count(ancestor-or-self::object)"/>
       </xsl:apply-templates>
 
       <xsl:call-template name="publish-all-classes-attr">
-	<xsl:with-param name="classes" select="substring-after($classes, ' ')"/>
-	<xsl:with-param name="list-item" select="$list-item"/>
 	<xsl:with-param name="path-stack" select="$path-stack"/>
+	<xsl:with-param name="list-item" select="$list-item"/>
+	<xsl:with-param name="classes" select="substring-after($classes, ' ')"/>
       </xsl:call-template>
     </xsl:when>
 
@@ -698,11 +712,8 @@
     <xsl:otherwise>
       <xsl:apply-templates select="/xylophone/classes/class[@name=$classes]/attr" mode="publish">  
 	<xsl:with-param name="list-item" select="$list-item"/>
-	<xsl:with-param name="rel-path">
-	  <xsl:call-template name="path-stack-find-path">
-	    <xsl:with-param name="path-stack" select="$path-stack"/>
-	  </xsl:call-template>
-	</xsl:with-param>
+	<xsl:with-param name="path-stack" select="$path-stack"/>
+	<xsl:with-param name="depth" select="count(ancestor-or-self::object)"/>
       </xsl:apply-templates>
     </xsl:otherwise>
   </xsl:choose>
@@ -771,12 +782,8 @@
     <xsl:when test="count(attr[@name=current()/@rdn]) > 0">
       <xsl:apply-templates select="attr[@name=current()/@rdn]" mode="eval-attr">
 	<xsl:with-param name="list-item" select="$list-item"/>
-
-	<xsl:with-param name="rel-path">
-	  <xsl:call-template name="path-stack-find-path">
-	    <xsl:with-param name="path-stack" select="$path-stack"/>
-	  </xsl:call-template>
-	</xsl:with-param>
+	<xsl:with-param name="path-stack" select="$path-stack"/>
+	<xsl:with-param name="depth" select="count(ancestor-or-self::object)"/>
       </xsl:apply-templates>
     </xsl:when>
 
@@ -817,12 +824,8 @@
     <xsl:when test="contains( $classes, ' ')">
 
       <xsl:apply-templates select="/xylophone/classes/class[@name=substring-before($classes, ' ')]/attr[@name=$name]" mode="eval-attr">
-	<xsl:with-param name="rel-path">
-	  <xsl:call-template name="path-stack-find-path">
-	    <xsl:with-param name="path-stack" select="$path-stack"/>
-	  </xsl:call-template>
-	</xsl:with-param>
-
+	<xsl:with-param name="path-stack" select="$path-stack"/>
+	<xsl:with-param name="depth" select="count(ancestor-or-self::object)"/>
 	<xsl:with-param name="list-item" select="$list-item"/>
       </xsl:apply-templates>
 
@@ -837,12 +840,9 @@
     <!-- Otherwise, just the one class left -->
     <xsl:otherwise>
       <xsl:apply-templates select="/xylophone/classes/class[@name=$classes]/attr[@name=$name]" mode="eval-attr">
+	<xsl:with-param name="path-stack" select="$path-stack"/>
+	<xsl:with-param name="depth" select="count(ancestor-or-self::object)"/>
 	<xsl:with-param name="list-item" select="$list-item"/>
-	<xsl:with-param name="rel-path">
-	  <xsl:call-template name="path-stack-find-path">
-	    <xsl:with-param name="path-stack" select="$path-stack"/>
-	  </xsl:call-template>
-	</xsl:with-param>
       </xsl:apply-templates>
     </xsl:otherwise>
   </xsl:choose>

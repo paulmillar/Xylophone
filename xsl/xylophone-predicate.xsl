@@ -41,6 +41,9 @@
     |
     |  This file contains support for evaluating simple predicates.
     |
+    |  NB these named templates do not know whether they are in an
+    |     object tree or class tree, so the depth must be supplied
+    |     as an explicit parameter.
     +-->
 
 <xsl:stylesheet version="1.0"
@@ -57,14 +60,12 @@
     +-->
 <xsl:template match="*" mode="eval-predicate">
   <xsl:param name="path-stack"/>
+  <xsl:param name="depth" select="count(ancestor-or-self::object)"/>
 
   <xsl:variable name="data">
     <xsl:apply-templates select="*" mode="eval-attr">
-      <xsl:with-param name="rel-path">
-	<xsl:call-template name="path-stack-find-path">
-	  <xsl:with-param name="path-stack" select="$path-stack"/>
-	</xsl:call-template>
-      </xsl:with-param>
+      <xsl:with-param name="path-stack" select="$path-stack"/>
+      <xsl:with-param name="depth" select="$depth"/>
     </xsl:apply-templates>
   </xsl:variable>
 
