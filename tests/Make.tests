@@ -1,0 +1,30 @@
+
+TESTS_SRC := $(wildcard test*.xml)
+
+TESTS_RESULTS = $(TESTS_SRC:%.xml=%-actual.ldif)
+TESTS_EXPECTED = $(TESTS_SRC:%.xml=%-expected.ldif)
+TESTS_OK = $(TESTS_SRC:%.xml=%.ok)
+
+XYLOPHONE_XSL=../../xsl/xylophone.xsl
+DYNAMIC_XML := $(shell pwd)/dynamic.xml
+LDIF_CMP=../util/compare.py
+
+XSLT_CMD = xsltproc --output $@ --stringparam xml-src-uri "$(DYNAMIC_XML)" $(XYLOPHONE_XSL) $< 
+CMP_CMD = $(LDIF_CMP) $^
+
+test: $(TESTS_OK)
+
+%.ok: %-actual.ldif %-expected.ldif
+	@echo Testing $<
+	@$(CMP_CMD) && touch $@
+
+%-actual.ldif: %.xml
+	@echo Building $@ from $<
+	@$(XSLT_CMD)
+
+clean:
+	rm -f $(TESTS_OK) $(TESTS_RESULTS) *~
+
+
+.PHONY: test clean
+.PRECIOUS: $(TESTS_RESULTS)
