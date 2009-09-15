@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--+
+    |  Check '+' at the beginning of a value
+    +-->
+
+<xylophone>
+  <publish>
+    <object rdn="o">
+      <attr name="o">&lt;Test> value</attr>
+      <attr name="v1">;:@osm</attr>
+      <attr name="v2">^_^ ;-></attr>
+      <attr name="v3">###++ >&lt;></attr>
+      <attr name="v4">\/\/\/\/</attr>
+    </object>
+  </publish>
+</xylophone>

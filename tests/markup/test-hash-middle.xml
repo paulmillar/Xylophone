@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--+
+    |  Check '#' in the middle of a value.  It should not be
+    |  marked up.
+    +-->
+
+<xylophone>
+  <publish>
+    <object rdn="o">
+      <attr name="o">Test#value</attr>
+    </object>
+  </publish>
+</xylophone>

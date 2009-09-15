@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--+
+    |  Check 'ä' (lower-case A umlaut) in the middle of a
+    |  value.  This file should be encoded as UTF-8
+    +-->
+
+<xylophone>
+  <publish>
+    <object rdn="o">
+      <attr name="o">Testävalue</attr>
+    </object>
+  </publish>
+</xylophone>
