@@ -1,0 +1,55 @@
+<test-element>
+
+  <first>
+    <metrics>
+      <metric name="first-metric">First</metric>
+      <metric name="second-metric">Second</metric>
+      <metric name="third-metric">Third</metric>
+    </metrics>
+  </first>
+
+  <animals>
+    <birds>
+      <bird type="Norwegian-blue">
+	<name>Polly parrot</name>
+      </bird>
+    </birds>
+    <fish>
+      <fish type="goldfish">
+	<name>Fred</name>
+      </fish>
+      <fish type="carp">
+	<name>Andrew</name>
+      </fish>
+    </fish>
+    <mammals>
+      <mammal type="cat">
+	<name>Tigger</name>
+      </mammal>
+      <mammal type="dog">
+	<name>Rover</name>
+      </mammal>
+    </mammals>
+    <reptiles>
+      <mammal type="snake">
+	<name>Odysseus</name>
+      </mammal>
+    </reptiles>
+  </animals>
+
+  <second>
+    <items>
+      <item>
+	<metric name="order">2</metric>
+	<metric name="name">Item-2 name</metric>
+	<metric name="date">2009-03-20</metric>
+      </item>
+
+      <item>
+	<metric name="order">1</metric>
+	<metric name="name">Item-1 name</metric>
+	<metric name="date">2009-10-01</metric>
+      </item>
+    </items>
+  </second>
+</test-element>
