@@ -8,6 +8,8 @@ TEST_DIRS_INIT=$(TEST_DIRS:%=%__INIT__)
 all: init tests
 
 tests: $(TEST_DIRS_TEST)
+	@echo All tests pass.
+
 clean: $(TEST_DIRS_CLEAN)
 init: $(TEST_DIRS_INIT)
 
