@@ -46,8 +46,9 @@
 <xsl:stylesheet version="1.0"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:dyn="http://exslt.org/dynamic"
-                extension-element-prefixes="dyn">
-  
+		xmlns:saxon655="http://icl.com/saxon"
+		xmlns:saxon9="http://saxon.sf.net/"
+                extension-element-prefixes="dyn saxon9 saxon655">
 
 <!--+
     |  Lookup a value with given path from $xml-src-uri.  If the result would
@@ -58,12 +59,36 @@
   <xsl:param name="path"/>
   <xsl:param name="default"/>
 
-  <xsl:variable name="lookup"
-		select="dyn:evaluate(concat('document($xml-src-uri)/',$path))"/>
+  <xsl:variable name="full-path" select="concat(&quot;document('&quot;,$xml-src-uri,&quot;')/&quot;,$path)"/>
+
+  <xsl:variable name="result">
+    <xsl:choose>
+
+      <!-- Try with Saxon 6.5.5 -->
+      <xsl:when test="function-available('saxon655:evaluate')">
+	<xsl:value-of select="saxon655:evaluate($full-path)"/>
+      </xsl:when>
+
+      <!-- Try with Saxon v9 -->
+      <xsl:when test="function-available('saxon9:evaluate')">
+	<xsl:value-of select="saxon9:evaluate($full-path)"/>
+      </xsl:when>
+
+      <!-- Try with EXSLT (xsltproc, xalan) -->
+      <xsl:when test="function-available('dyn:evaluate')">
+	<xsl:value-of select="dyn:evaluate($full-path)"/>
+      </xsl:when>
+
+      <!-- Flag this as a problem -->
+      <xsl:otherwise>
+	<xsl:message>You are using an XSLT processor without dyn:evaluate() support.</xsl:message>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:variable>
 
   <xsl:choose>
-    <xsl:when test="$lookup">
-      <xsl:value-of select="$lookup"/>
+    <xsl:when test="$result">
+      <xsl:value-of select="$result"/>
     </xsl:when>
 
     <xsl:otherwise>
@@ -93,7 +118,29 @@
     </xsl:call-template>
   </xsl:variable>
 
-  <xsl:value-of select="count(dyn:evaluate(concat('document($xml-src-uri)/',$abs-path)))"/>
+  <xsl:variable name="full-path" select="concat('document($xml-src-uri)/',$abs-path)"/>
+
+  <xsl:choose>
+    <!-- Support for Saxon 6.5.5 -->
+    <xsl:when test="function-available('saxon655:evaluate')">
+      <xsl:value-of select="count(saxon655:evaluate($full-path))"/>
+    </xsl:when>
+    
+    <!-- Support for Saxon v9 -->
+    <xsl:when test="function-available('saxon9:evaluate')">
+      <xsl:value-of select="count(saxon9:evaluate($full-path))"/>
+    </xsl:when>
+
+    <!-- Support for EXSLT-supporting processors (e.g., xsltproc, xalan) -->
+    <xsl:when test="function-available('dyn:evaluate')">
+      <xsl:value-of select="count(dyn:evaluate($full-path))"/>
+    </xsl:when>
+
+    <!-- Flag this as a problem -->
+    <xsl:otherwise>
+      <xsl:message>You are using an XSLT processor without dyn:evaluate() support.</xsl:message>
+    </xsl:otherwise>
+  </xsl:choose>
 
 </xsl:template>
 
