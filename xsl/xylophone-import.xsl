@@ -81,7 +81,7 @@
 
       <!-- Flag this as a problem -->
       <xsl:otherwise>
-	<xsl:message>You are using an XSLT processor without dyn:evaluate() support.</xsl:message>
+	<xsl:message>You are using an XSLT processor without evaluate() support.</xsl:message>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:variable>
@@ -138,7 +138,7 @@
 
     <!-- Flag this as a problem -->
     <xsl:otherwise>
-      <xsl:message>You are using an XSLT processor without dyn:evaluate() support.</xsl:message>
+      <xsl:message>You are using an XSLT processor without evaluate() support.</xsl:message>
     </xsl:otherwise>
   </xsl:choose>
 
