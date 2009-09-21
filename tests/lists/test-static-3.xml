@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<xylophone>
+  <publish>
+    <object rdn="item" list="items">
+      <attr name="item">Test <item/></attr>
+    </object>
+  </publish>
+
+  <lists>
+    <list name="items">
+      <item>foo</item>
+      <item>bar</item>
+      <item>baz</item>
+    </list>
+  </lists>
+</xylophone>

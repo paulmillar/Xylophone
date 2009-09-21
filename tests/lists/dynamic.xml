@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<batch-system>
+
+  <summary>
+    <start-date>2009-04-20T11:12Z</start-date> 
+    
+    <stats>
+      <processed-jobs>1030</processed-jobs>
+      <processed-batches>321</processed-batches>
+    </stats>
+  </summary>
+ 
+  <job-batches>
+    <job-batch id="req-322">
+      <name>Alice's jobs</name>
+      <priority>normal</priority>
+
+      <jobs>
+	<job id="1031">
+	  <status>active</status>
+	  <start-date>2009-05-20T19:30Z</start-date>
+	</job>
+
+	<job id="1032">
+	  <status>waiting</status>
+	</job>
+
+	<job id="1033">
+	  <status>waiting</status>
+	</job>
+      </jobs>
+    </job-batch>
+
+    <job-batch id="req-323">
+      <name>Bob's jobs</name>
+      <priority>normal</priority>
+
+      <jobs>
+	<job id="1034">
+	  <status>waiting</status>
+	</job>
+
+	<job id="1035">
+	  <status>waiting</status>
+	</job>
+      </jobs>
+    </job-batch>
+
+    <job-batch id="req-324">
+      <name>Katherine's jobs</name>
+      <priority>high</priority>
+
+      <jobs>
+	<job id="1036">
+	  <status>active</status>
+	  <start-date>2009-05-20T18:12Z</start-date>
+	</job>
+      </jobs>
+    </job-batch>
+
+  </job-batches>
+
+</batch-system>

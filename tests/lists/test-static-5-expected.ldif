@@ -1,0 +1,26 @@
+dn: innerItem=foo,outerItem=foo
+innerItem: foo
+
+dn: innerItem=bar,outerItem=bar
+innerItem: bar
+
+dn: innerItem=baz,outerItem=baz
+innerItem: baz
+
+dn: innerItem=foo,outerItem=foo
+innerItem: foo
+
+dn: innerItem=bar,outerItem=bar
+innerItem: bar
+
+dn: innerItem=baz,outerItem=baz
+innerItem: baz
+
+dn: innerItem=foo,outerItem=foo
+innerItem: foo
+
+dn: innerItem=bar,outerItem=bar
+innerItem: bar
+
+dn: innerItem=baz,outerItem=baz
+innerItem: baz

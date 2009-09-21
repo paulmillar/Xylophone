@@ -1,0 +1,40 @@
+dn: jobBatchId=req-322,system=batch-system
+jobBatchId: req-322
+jobBatchName: Alice's jobs
+jobBatchPriority: normal
+
+dn: jobId=1031,jobBatchId=req-322,system=batch-system
+jobId: 1031
+jobStatus: active
+jobStartDate: 2009-05-20T19:30Z
+
+dn: jobId=1032,jobBatchId=req-322,system=batch-system
+jobId: 1032
+jobStatus: waiting
+
+dn: jobId=1033,jobBatchId=req-322,system=batch-system
+jobId: 1033
+jobStatus: waiting
+
+dn: jobBatchId=req-323,system=batch-system
+jobBatchId: req-323
+jobBatchName: Bob's jobs
+jobBatchPriority: normal
+
+dn: jobId=1034,jobBatchId=req-323,system=batch-system
+jobId: 1034
+jobStatus: waiting
+
+dn: jobId=1035,jobBatchId=req-323,system=batch-system
+jobId: 1035
+jobStatus: waiting
+
+dn: jobBatchId=req-324,system=batch-system
+jobBatchId: req-324
+jobBatchName: Katherine's jobs
+jobBatchPriority: high
+
+dn: jobId=1036,jobBatchId=req-324,system=batch-system
+jobId: 1036
+jobStatus: active
+jobStartDate: 2009-05-20T18:12Z

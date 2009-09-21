@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<xylophone>
+  <publish>
+
+    <object hidden="1" rdn="system">
+      <attr name="system">batch-system</attr>
+
+      <!-- Select all job-request elements -->
+      <object rdn="jobBatchId" select="/batch-system/job-batches/job-batch"
+	      comment="A batch of jobs">
+	<attr name="jobBatchId"><lookup path="@id"/></attr>
+	<attr name="jobBatchName"><lookup path="name"/></attr>
+	<attr name="jobBatchPriority"><lookup path="priority"/></attr>
+
+	<!-- child object for each job -->
+	<object rdn="jobId" select="jobs/job">
+	  <attr name="jobId"><lookup path="@id"/></attr>
+	  <attr name="jobStatus"><lookup path="status"/></attr>
+	  <attr not-empty="1"
+		name="jobStartDate"><lookup path="start-date"/></attr>
+	</object>
+
+      </object>
+
+    </object>
+  </publish>
+</xylophone>

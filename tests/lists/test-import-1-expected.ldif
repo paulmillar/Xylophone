@@ -1,0 +1,14 @@
+dn: jobBatchId=req-322,system=batch-system
+jobBatchId: req-322
+jobBatchName: Alice's jobs
+jobBatchPriority: normal
+
+dn: jobBatchId=req-323,system=batch-system
+jobBatchId: req-323
+jobBatchName: Bob's jobs
+jobBatchPriority: normal
+
+dn: jobBatchId=req-324,system=batch-system
+jobBatchId: req-324
+jobBatchName: Katherine's jobs
+jobBatchPriority: high
