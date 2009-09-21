@@ -54,7 +54,6 @@
   <xsl:param name="path"/>
   <xsl:param name="rel-path"/>
 
-
   <!--+
       | Expand to either just $path or $combined-path, depending on whether $path
       | $path is absolute.
@@ -113,10 +112,12 @@
   <xsl:param name="path"/>
   <xsl:param name="depth" select="count(ancestor-or-self::object)"/>
 
-  <xsl:apply-templates select="exsl:node-set($current-path-stack)/item"
-		       mode="path-stack-copy">
-    <xsl:with-param name="exclude-depth" select="$depth"/>
-  </xsl:apply-templates>
+  <xsl:if test="boolean($current-path-stack)">
+    <xsl:apply-templates select="exsl:node-set($current-path-stack)/item"
+			 mode="path-stack-copy">
+      <xsl:with-param name="exclude-depth" select="$depth"/>
+    </xsl:apply-templates>
+  </xsl:if>
 
   <item path="{$path}"><xsl:value-of select="$depth"/></item>
 </xsl:template>
@@ -149,7 +150,9 @@
   <xsl:param name="depth" select="count(ancestor-or-self::object)"/>
   <xsl:param name="path-stack"/>
 
-  <xsl:value-of select="math:highest(exsl:node-set($path-stack)/item[. &lt;= $depth])/@path"/>
+  <xsl:if test="boolean($path-stack)">
+    <xsl:value-of select="math:highest(exsl:node-set($path-stack)/item[. &lt;= $depth])/@path"/>
+  </xsl:if>
 </xsl:template>
 
 
@@ -166,7 +169,15 @@
     <xsl:value-of select="concat( '>>> ', $label, '&#x0a;')"/>
   </xsl:if>
 
-  <xsl:apply-templates select="exsl:node-set($path-stack)" mode="path-stack-show"/>
+  <xsl:choose>
+    <xsl:when test="not($path-stack)">
+      <xsl:text>    (empty) &#x0a;</xsl:text>
+    </xsl:when>
+
+    <xsl:otherwise>
+      <xsl:apply-templates select="exsl:node-set($path-stack)" mode="path-stack-show"/>
+    </xsl:otherwise>
+  </xsl:choose>
 
   <xsl:if test="$label">
     <xsl:value-of select="concat( '>>> ', $label, ' DONE&#x0a;&#x0a;')"/>
