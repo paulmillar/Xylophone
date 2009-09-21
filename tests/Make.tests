@@ -9,21 +9,69 @@ XYLOPHONE_XSL=../../xsl/xylophone.xsl
 DYNAMIC_XML := $(shell pwd)/dynamic.xml
 LDIF_CMP=../util/compare.py
 
-XSLT_CMD = xsltproc --output $@ --stringparam xml-src-uri "$(DYNAMIC_XML)" $(XYLOPHONE_XSL) $< 
+##
+##  Support for testing with Saxon 6.5.5
+##
+SAXON_JAR=/usr/share/java/saxon-6.5.5.jar
+SAXON_CMD = java -cp $(SAXON_JAR) com.icl.saxon.StyleSheet -o "$@" "$<" "$(XYLOPHONE_XSL)" "xml-src-uri=$(DYNAMIC_XML)"
+
+
+##
+##  Support for testing with Saxon-B
+##
+SAXONB_JAR=/usr/share/java/saxonb.jar
+SAXONB_CMD = java -cp $(SAXONB_JAR) net.sf.saxon.Transform -versionmsg:off "-xsl:$(XYLOPHONE_XSL)" "-s:$<" "-o:$@" "xml-src-uri=$(DYNAMIC_XML)"
+
+
+##
+##  Support for testing with xalan cmd-line tool
+##
+XALAN_CLI_CMD = xalan -xsl $(XYLOPHONE_XSL) -in $< -out $@
+
+
+##
+##  Support for testing with Xalan jar file
+##
+XALAN_JAR=/usr/share/java/xalan2.jar
+XALAN_CP=$(XALAN_JAR)
+##
+##  Following are supplied with xalan, but likely are not needed
+#XALAN_SERIALIZER_JAR=/usr/share/java/serializer.jar
+#XALAN_XMLAPIS_JAR=/usr/share/java/xml-apis.jar
+#XALAN_XERCES_JAR=/usr/share/java/xercesImpl.jar
+#XALAN_CP=$(XALAN_JAR):$(XALAN_SERIALIZER_JAR):$(XALAN_XMLAPIS_JAR):$(XALAN_XERCES_JAR)
+##
+XALAN_JAVA_CMD = java -cp $(XALAN_CP) org.apache.xalan.xslt.Process -in "$<" -xsl "$(XYLOPHONE_XSL)" -out "$@" -param xml-src-uri "$(DYNAMIC_XML)"
+
+
+##
+##  Support for testing with xsltproc
+##
+XSLTPROC_CMD = xsltproc --output $@ --stringparam xml-src-uri "$(DYNAMIC_XML)" $(XYLOPHONE_XSL) $< 
+
+
+##
+##  What processor to use.  Uncomment one of these
+##
+#XSLT_CMD = $(SAXON_CMD)
+#XSLT_CMD = $(SAXONB_CMD)
+#XSLT_CMD = $(XALAN_CLI_CMD)
+#XSLT_CMD = $(XALAN_JAVA_CMD)
+XSLT_CMD = $(XSLTPROC_CMD)
+
 CMP_CMD = $(LDIF_CMP) $^
 
 test: $(TESTS_OK)
 
 %.ok: %-actual.ldif %-expected.ldif
-	@echo Testing $<
+	@echo Testing $(<:%-actual.ldif=%)
 	@$(CMP_CMD) && touch $@
 
 %-actual.ldif: %.xml
-	@echo Building $@ from $<
 	@$(XSLT_CMD)
 
 clean:
-	rm -f $(TESTS_OK) $(TESTS_RESULTS) *~
+	@rm -f $(TESTS_OK) $(TESTS_RESULTS) *~
 
 
 .PHONY: test clean
