@@ -95,7 +95,6 @@
 	<xsl:with-param name="path-stack" select="$path-stack"/>
 	<xsl:with-param name="abs-path" select="$abs-path"/>
 	<xsl:with-param name="list-item" select="$list-item"/>
- 	<xsl:with-param name="path-stack" select="$path-stack"/>
       </xsl:call-template>
 
     </xsl:when>
@@ -176,7 +175,7 @@
 
 
     <!-- Add this object's path to path-stack -->
-    <xsl:variable name="path-stack">
+    <xsl:variable name="path-stack-with-this-object">
       <xsl:call-template name="path-stack-add">
 	<xsl:with-param name="current-path-stack" select="$path-stack"/>
 	<xsl:with-param name="path" select="$this-obj-path"/>
@@ -186,7 +185,7 @@
 
     <!-- Possibly publish this object -->
     <xsl:call-template name="maybe-publish-object-and-children"> 
-      <xsl:with-param name="path-stack" select="$path-stack"/>
+      <xsl:with-param name="path-stack" select="$path-stack-with-this-object"/>
       <xsl:with-param name="list-item" select="$list-item"/>
     </xsl:call-template>
 
