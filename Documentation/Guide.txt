@@ -25,7 +25,7 @@ and, optionally:
 
 The XSLT-processor software can be any program that understands the
 XSLT version 1.0 standard and provides the commonly available EXSL
-node-set() extension function.
+exsl:node-set() and dyn:evaluate() extension function.
 
 Occasionally, this document refers to a specific XSLT processor to
 give a complete example of Xylophone's usage.  In these places,
@@ -1254,10 +1254,10 @@ correct URI for the XML data:
   xsltproc -stringparam xml-src-uri http://www.example.org/data \
            ../xsl/xylophone.xsl structure.xml
 
-To locate the information that should be included, a path describing
-the information's location within the dynamic file must be specified.
-This path may be specified as the path attribute of lookup, or be
-provided within the lookup element; for example, both
+To locate the information that should be included, an XPath string
+describing the information's location within the dynamic file must be
+specified.  This path may be specified as the path attribute of
+lookup, or be provided within the lookup element; for example, both
 
   <lookup path="/animals/animal/name"/>
 
@@ -1307,14 +1307,14 @@ path selects the name of the third animal:
 
 The following selects the name of the first bird:
 
-  <lookup path="/animals/animal[class=bird]/name"/>
+  <lookup path="/animals/animal[@class='bird'][1]/name"/>
 
 The following selects the second bird
 
-  <lookup path="/animals/animal[class=bird][2]/name"/>
+  <lookup path="/animals/animal[@class='bird'][2]/name"/>
 
-As a special case, if the last path component with a '@' then the
-lookup element selects the attribute with the same name.  So,
+If the last path component with a '@' then the lookup element selects
+the attribute with the same name.  So,
 
   <lookup path="/animals/animal/@class"/>
 
