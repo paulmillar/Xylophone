@@ -59,7 +59,7 @@
   <xsl:call-template name="output-raw-attribute">
     <xsl:with-param name="key" select="$key"/>
     <xsl:with-param name="value">
-      <xsl:call-template name="markup-value">
+      <xsl:call-template name="markup-attribute-value">
 	<xsl:with-param name="value" select="$value"/>
       </xsl:call-template>
     </xsl:with-param>

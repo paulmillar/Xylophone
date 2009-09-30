@@ -737,7 +737,7 @@
   <xsl:param name="path-stack"/>
   <xsl:param name="list-item"/>
 
-  <xsl:apply-templates select="." mode="emit-RDN">
+  <xsl:apply-templates select="." mode="emit-RDN-for-DN">
     <xsl:with-param name="path-stack" select="$path-stack"/>
     <xsl:with-param name="list-item" select="$list-item"/>
   </xsl:apply-templates>
@@ -754,58 +754,94 @@
 
 
 <!--+
-    |  Emit the current object's RDN.
+    |  Emit the current object's RDN suitable for part of a DN.
     |
-    |  This involves looking up the named attribute's value.  This might
-    |  be an object-local attribute or it might be defined within one of
-    |  the object's classes, so some hunting may be required.
+    |  We emit the RDN value with appropriate markup.
     +-->
-<xsl:template match="object" mode="emit-RDN">
+<xsl:template match="object" mode="emit-RDN-for-DN">
   <xsl:param name="path-stack"/>
   <xsl:param name="list-item"/>
 
   <xsl:value-of select="concat(@rdn,'=')"/>
 
-  <xsl:call-template name="markup-value">
+  <xsl:call-template name="markup-rdn-value">
     <xsl:with-param name="value">
-      <xsl:choose>
-	<xsl:when test="not(@rdn)">
-	  <xsl:message>Missing attribute "rdn" for object.</xsl:message>
-	</xsl:when>
-	
-	<xsl:when test="not(normalize-space(@rdn))">
-	  <xsl:message>Empty attribute "rdn" for object.</xsl:message>
-	</xsl:when>
-
-	<!-- First look to see if the RDN is an object-local attribute -->
-
-	<xsl:when test="count(attr[@name=current()/@rdn]) > 0">
-	  <xsl:apply-templates select="attr[@name=current()/@rdn]" mode="eval-attr">
-	    <xsl:with-param name="list-item" select="$list-item"/>
-	    <xsl:with-param name="path-stack" select="$path-stack"/>
-	    <xsl:with-param name="depth" select="count(ancestor-or-self::object)"/>
-	  </xsl:apply-templates>
-	</xsl:when>
-
-	<!-- Otherwise, go hunting... -->
-	<xsl:when test="@classes">
-	  <xsl:call-template name="hunt-all-classes-for-attr">
-	    <xsl:with-param name="classes" select="normalize-space(@classes)"/>
-	    <xsl:with-param name="path-stack" select="$path-stack"/>
-	    <xsl:with-param name="list-item" select="$list-item"/>
-	    <xsl:with-param name="name" select="@rdn"/>
-	  </xsl:call-template>
-	</xsl:when>
-
-	<xsl:otherwise>
-	  <xsl:message>Cannot find RDN attribute <xsl:value-of select="@rdn"/></xsl:message>
-	</xsl:otherwise>
-      </xsl:choose>
+      <xsl:call-template name="emit-RDN-value">
+	<xsl:with-param name="path-stack" select="$path-stack"/>
+	<xsl:with-param name="list-item" select="$list-item"/>
+      </xsl:call-template>
     </xsl:with-param>
   </xsl:call-template>
 </xsl:template>
 
 
+<!--+
+    |  Emit the current object's RDN suitable as a value
+    |
+    |  We emit the RDN value with appropriate markup.
+    +-->
+<xsl:template match="object" mode="emit-RDN-for-attribute">
+  <xsl:param name="path-stack"/>
+  <xsl:param name="list-item"/>
+
+  <xsl:value-of select="concat(@rdn,'=')"/>
+
+  <xsl:call-template name="markup-attribute-value">
+    <xsl:with-param name="value">
+      <xsl:call-template name="emit-RDN-value">
+	<xsl:with-param name="path-stack" select="$path-stack"/>
+	<xsl:with-param name="list-item" select="$list-item"/>
+      </xsl:call-template>
+    </xsl:with-param>
+  </xsl:call-template>
+</xsl:template>
+
+
+
+<!--+
+    |  Emit the current object's RDN attribute value.
+    |
+    |  This involves looking up the named attribute's value.  This might
+    |  be an object-local attribute or it might be defined within one of
+    |  the object's classes, so some hunting may be required.
+    +-->
+<xsl:template name="emit-RDN-value">
+  <xsl:param name="path-stack"/>
+  <xsl:param name="list-item"/>
+
+  <xsl:choose>
+    <xsl:when test="not(@rdn)">
+      <xsl:message>Missing attribute "rdn" for object.</xsl:message>
+    </xsl:when>
+	
+    <xsl:when test="not(normalize-space(@rdn))">
+      <xsl:message>Empty attribute "rdn" for object.</xsl:message>
+    </xsl:when>
+
+    <!-- First look to see if the RDN is an object-local attribute -->
+    <xsl:when test="count(attr[@name=current()/@rdn]) > 0">
+      <xsl:apply-templates select="attr[@name=current()/@rdn]" mode="eval-attr">
+	<xsl:with-param name="list-item" select="$list-item"/>
+	<xsl:with-param name="path-stack" select="$path-stack"/>
+	<xsl:with-param name="depth" select="count(ancestor-or-self::object)"/>
+      </xsl:apply-templates>
+    </xsl:when>
+
+    <!-- Otherwise, go hunting... -->
+    <xsl:when test="@classes">
+      <xsl:call-template name="hunt-all-classes-for-attr">
+	<xsl:with-param name="classes" select="normalize-space(@classes)"/>
+	<xsl:with-param name="path-stack" select="$path-stack"/>
+	<xsl:with-param name="list-item" select="$list-item"/>
+	<xsl:with-param name="name" select="@rdn"/>
+      </xsl:call-template>
+    </xsl:when>
+
+    <xsl:otherwise>
+      <xsl:message>Cannot find RDN attribute <xsl:value-of select="@rdn"/></xsl:message>
+    </xsl:otherwise>
+  </xsl:choose>
+</xsl:template>
 
 
 

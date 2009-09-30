@@ -330,7 +330,7 @@
 
   <!-- Select the nearest ancestor object that has a matching rdn -->
   <xsl:apply-templates select="ancestor::object[@rdn=current()/@rdn][1]"
-		       mode="emit-RDN">
+		       mode="emit-RDN-for-attribute">
     <xsl:with-param name="path-stack" select="$path-stack"/>
     <xsl:with-param name="list-item" select="$list-item"/>
   </xsl:apply-templates>

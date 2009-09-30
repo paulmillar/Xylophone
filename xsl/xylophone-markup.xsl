@@ -47,6 +47,39 @@
                 version='1.0'>
 
 
+<!--+
+    |  Markup an attribute value.  This is distinct from marking up the value
+    |  when it is part of an RDN.
+    +-->
+<xsl:template name="markup-attribute-value">
+  <xsl:param name="value"/>
+
+  <!-- Potentially escape first character -->
+  <xsl:variable name="value-w-init-markup">
+    <xsl:choose>
+      <xsl:when test="starts-with($value,' ')">
+	<xsl:value-of select="concat('\',$value)"/>
+      </xsl:when>
+
+      <xsl:otherwise>
+	<xsl:value-of select="$value"/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:variable>
+
+  <!-- Emit either string with final space marked up or the string so far -->
+  <xsl:choose>
+    <xsl:when test="contains(substring($value-w-init-markup, string-length($value-w-init-markup)),' ')">
+      <xsl:value-of select="concat(substring($value-w-init-markup, 1, string-length($value-w-init-markup)-1), '\ ')"/>
+    </xsl:when>
+
+    <xsl:otherwise>
+      <xsl:value-of select="$value-w-init-markup"/>
+    </xsl:otherwise>
+  </xsl:choose>
+</xsl:template>
+
+
 
 <!--+
     |  Convert attribute values so reserved characters may be included.  RFC 2253
@@ -54,18 +87,18 @@
     |
     |     o a space or "#" character occuring at the beginning of a string,
     |     o a space character occuring at the end of the string,
-    |     o any instaces of ",", "+", """, "\", "<", ">" or ";" characters.
+    |     o any instaces of ",", "+", """, "\", "<", ">", "=" or ";" characters.
     |
     |  Characters are escaped by prefixing them with a "\", so "<" is escaped as
     |  "\<".  Other characters may be escaped by replacing them with "\nn" where
     |  "nn" represents a two-digit hexadecimal number, which forms a single byte
     |  in the code of the character.
     +-->
-<xsl:template name="markup-value">
+<xsl:template name="markup-rdn-value">
   <xsl:param name="value"/>
 
   <!-- Mark up the bulk of the text -->
-  <xsl:variable name="value-w-markup"><xsl:call-template name="markup-value-main"><xsl:with-param name="value" select="$value"/></xsl:call-template></xsl:variable>
+  <xsl:variable name="value-w-markup"><xsl:call-template name="markup-rdn-value-main"><xsl:with-param name="value" select="$value"/></xsl:call-template></xsl:variable>
 
   <!-- Potentially escape first character -->
   <xsl:variable name="value-w-init-markup">
@@ -97,8 +130,28 @@
     |  Emit a string where all characters ",", "+", """, "\", "<", ">" and ";" are
     |  replaced by their escaped equivalent "\,", "\+", "\"", "\\", "\<", "\>" and
     |  "\;" respectively. 
+    |
+    |  NB.  RFC 2253 has a contradiction about whether "=" is escaped.  The BNF has
+    |  "=" as a possible value for "special", which is then required to be
+    |  marked-up; however, the body-text for section 2.4 has the following:
+    |
+    |     If the UTF-8 string does not have any of the following
+    |     characters which need escaping, then that string can be
+    |     used as the string representation of the value.
+    |
+    |      o   a space or "#" character occurring at the beginning
+    |          of the string
+    |
+    |      o   a space character occurring at the end of the string
+    |
+    |      o   one of the characters ",", "+", """, "\", "<", ">" or
+    |          ";"
+    |
+    |     Implementations MAY escape other characters.
+    |
+    |  Since we MAY escape other characters, we do so for "=" to be safe.
     +-->
-<xsl:template name="markup-value-main">
+<xsl:template name="markup-rdn-value-main">
   <xsl:param name="value"/>
 
   <xsl:call-template name="markup-value-char">
