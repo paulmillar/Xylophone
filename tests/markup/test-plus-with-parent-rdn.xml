@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--+
+    |  Check '+' a parent-rdn value.
+    +-->
+
+<xylophone>
+  <publish>
+    <object rdn="o">
+      <attr name="o">Test+value</attr>
+
+      <object rdn="ou">
+	<attr name="ou">Department X</attr>
+	<attr name="ref"><parent-rdn rdn="o"/></attr>
+      </object>
+    </object>
+  </publish>
+</xylophone>

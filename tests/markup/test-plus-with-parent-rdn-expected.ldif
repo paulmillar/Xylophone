@@ -1,0 +1,6 @@
+dn: o=Test\+value
+o: Test+value
+
+dn: ou=Department X,o=Test\+value
+ou: Department X
+ref: o=Test+value
