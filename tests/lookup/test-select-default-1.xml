@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--+
+    |  Check that default is used when a path lookup fails
+    +-->
+
+<xylophone>
+  <publish>
+    <object rdn="o">
+      <attr name="o">
+	<lookup default="DEFAULT"
+		path="/test-element/does-not-exist"/>
+      </attr>
+    </object>
+  </publish>
+</xylophone>
