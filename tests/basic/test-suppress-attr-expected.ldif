@@ -1,0 +1,3 @@
+dn: o=test-organisation
+o: test-organisation
+result: SUCCESS

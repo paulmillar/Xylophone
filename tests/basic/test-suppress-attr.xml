@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--+
+    |  Test suppressing attributes
+    +-->
+
+<xylophone>
+  <publish>
+    <object rdn="o">
+      <attr name="o">test-organisation</attr>
+      <attr name="result"><suppress test="a">a</suppress>FAIL</attr>
+      <attr name="result"><suppress test="a">b</suppress>SUCCESS</attr>
+    </object>
+  </publish>
+</xylophone>
