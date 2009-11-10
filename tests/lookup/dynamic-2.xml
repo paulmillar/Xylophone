@@ -1,0 +1,38 @@
+<test>
+  <collection>My bookshelf</collection>
+
+  <books>
+    <book>
+      <title>The Hitchhikers Guide to the Universe</title>
+      <author>Douglas Adams</author>
+      <pages>159</pages>
+      <publisher>Pan Books Ltd</publisher>
+    </book>
+
+    <book>
+      <title>The Pickwick Papers</title>
+      <author>Charles Dickens</author>
+      <publisher>Oxford Univerity Press</publisher>
+    </book>
+
+    <book>
+      <title>The Iliad</title>
+      <author>Homer</author>
+      <translated-by>Robert Fitzgerald</translated-by>
+      <pages>443</pages>
+      <publisher>Oxford University Press</publisher>
+    </book>
+
+    <book>
+      <title>Beuwulf</title>
+      <translated-by>Seamus Heaney</translated-by>
+      <publisher>Faber and Faber Limited</publisher>
+    </book>
+
+    <book>
+      <title>The Last Continent</title>
+      <author>Terry Pratchett</author>
+      <publisher>Transworld Publishers</publisher>
+    </book>
+  </books>
+</test>

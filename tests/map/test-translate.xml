@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--+
+    |  Check translate works as expected
+    +-->
+
+<xylophone>
+  <publish>
+    <object rdn="o">
+      <attr name="o">
+	<map name="test-map">aabbeeffiijjooppuuzz</map>
+      </attr>
+    </object>
+  </publish>
+  <mapping>
+    <map name="test-map">
+      <translate from="aeiou" to="AEIOU"/>
+    </map>
+  </mapping>
+</xylophone>

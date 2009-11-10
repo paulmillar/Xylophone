@@ -1,0 +1,32 @@
+dn: type=Books
+type: Books
+
+dn: collection=My bookshelf,type=Books
+collection: My bookshelf
+
+dn: Title=The Hitchhikers Guide to the Universe,collection=My bookshelf,typ
+ e=Books
+Title: The Hitchhikers Guide to the Universe
+Author: Douglas Adams
+Publisher: Pan Books Ltd
+
+dn: Title=The Pickwick Papers,collection=My bookshelf,type=Books
+Title: The Pickwick Papers
+Author: Charles Dickens
+Publisher: Oxford Univerity Press
+
+dn: Title=The Iliad,collection=My bookshelf,type=Books
+Title: The Iliad
+Author: Homer
+Publisher: Oxford University Press
+TranslatedBy: Robert Fitzgerald
+
+dn: Title=Beuwulf,collection=My bookshelf,type=Books
+Title: Beuwulf
+Publisher: Faber and Faber Limited
+TranslatedBy: Seamus Heaney
+
+dn: Title=The Last Continent,collection=My bookshelf,type=Books
+Title: The Last Continent
+Author: Terry Pratchett
+Publisher: Transworld Publishers
