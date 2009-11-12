@@ -11,30 +11,34 @@
     +-->
 
 <xylophone>
+  <locations>
+    <location name="external-file">&abs-test-path;/lookup/dynamic-2.xml</location>
+  </locations>
+
   <publish>
     <object rdn="type">
       <attr name="type">Books</attr>
 
       <object rdn="collection">
 	<attr name="collection">
-	  <lookup xml-src-uri="&abs-test-path;/lookup/dynamic-2.xml"
+	  <lookup xml-src="external-file"
 		  path="/test/collection"/>
 	</attr>
 	
 	<object rdn="Title"
-		xml-src-uri="&abs-test-path;/lookup/dynamic-2.xml"
+		xml-src="external-file"
 		select="/test/books/book">
-	  <attr name="Title"><lookup xml-src-uri="&abs-test-path;/lookup/dynamic-2.xml" 
+	  <attr name="Title"><lookup xml-src="external-file" 
 	  path="title"/></attr>
 
 	  <attr not-empty="1"
-		name="Author"><lookup xml-src-uri="&abs-test-path;/lookup/dynamic-2.xml" 
+		name="Author"><lookup xml-src="external-file" 
 	  path="author"/></attr>
 
-	  <attr name="Publisher"><lookup xml-src-uri="&abs-test-path;/lookup/dynamic-2.xml" 
+	  <attr name="Publisher"><lookup xml-src="external-file" 
 	  path="publisher"/></attr>
 	  <attr not-empty='1'
-		name="TranslatedBy"><lookup xml-src-uri="&abs-test-path;/lookup/dynamic-2.xml" 
+		name="TranslatedBy"><lookup xml-src="external-file" 
 	  path="translated-by"/></attr>
 	</object>
       </object>
