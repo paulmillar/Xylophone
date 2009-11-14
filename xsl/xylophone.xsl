@@ -67,6 +67,7 @@
 <xsl:include href="xylophone-user-elements.xsl"/>
 <xsl:include href="xylophone-path.xsl"/>
 <xsl:include href="xylophone-markup.xsl"/>
+<xsl:include href="xylophone-unique.xsl"/>
 
 
 <!--+

@@ -1,0 +1,7 @@
+dn: ou=Publishing,o=ACME
+ou: Publishing
+manager: Fred Flintstone
+
+dn: ou=Sales,o=ACME
+ou: Sales
+manager: Andrew Simons

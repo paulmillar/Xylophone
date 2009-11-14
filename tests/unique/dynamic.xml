@@ -1,0 +1,13 @@
+<units>
+  <unit name="unit 1">
+    <manager>Fred Flintstone</manager>
+  </unit>
+
+  <unit name="unit 2">
+    <manager>Andrew Simons</manager>
+  </unit>
+
+  <unit name="unit 3">
+    <manager>Tanja Projksa</manager>
+  </unit>
+</units>

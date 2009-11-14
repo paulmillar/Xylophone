@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+
+<xylophone>
+  <publish>
+    <object rdn="o">
+      <attr name="o">ACME</attr>
+
+      <attr name="unit"
+	    select="/units/unit">
+	<unique>
+	  <map name="unit-to-official-name">
+	    <lookup path="@name"/>
+	  </map>
+	</unique>
+	<map name="unit-to-official-name">
+	  <lookup path="@name"/>
+	</map> - <lookup path="@name"/>
+      </attr>
+    </object>
+  </publish>
+
+  <mapping>
+    <map name="unit-to-official-name">
+      <sub match="unit 1" replace-with="marketing"/>
+      <sub match="unit 2" replace-with="marketing"/>
+      <sub match="unit 3" replace-with="finance"/>
+    </map>
+  </mapping>
+</xylophone>

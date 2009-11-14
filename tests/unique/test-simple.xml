@@ -1,0 +1,39 @@
+
+
+<xylophone>
+
+  <publish>
+    <object hidden="1" rdn="o">
+      <attr name="o">ACME</attr>
+      
+      <object rdn="ou"
+	      select="/units/unit">
+
+	<unique>
+	  <map name="name to official name">
+	    <lookup path="@name"/>
+	  </map>
+	</unique>
+
+	<attr name="ou">
+	  <map name="name to official name">
+	    <lookup path="@name"/>
+	  </map>
+	</attr>
+
+	<attr name="manager">
+	  <lookup path="manager"/>
+	</attr>
+      </object>
+    </object>
+  </publish>
+
+  <mapping>
+    <map name="name to official name">
+      <sub match="unit 1" replace-with="Publishing"/>
+      <sub match="unit 2" replace-with="Sales"/>
+      <sub match="unit 3" replace-with="Publishing"/>
+    </map>
+  </mapping>
+
+</xylophone>

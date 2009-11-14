@@ -1,5 +1,5 @@
 
-TEST_DIRS=basic lookup markup lists map sum
+TEST_DIRS=basic lookup markup lists map sum unique
 
 TEST_DIRS_TEST=$(TEST_DIRS:%=%__TEST__)
 TEST_DIRS_CLEAN=$(TEST_DIRS:%=%__CLEAN__)

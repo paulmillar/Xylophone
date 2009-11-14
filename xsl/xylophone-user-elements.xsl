@@ -316,6 +316,8 @@
 <!-- When in mode eval-attr we ignore any suppress elements -->
 <xsl:template match="suppress" mode="eval-attr"/>
 
+<!-- When in mode eval-attr we ignore any unique elements -->
+<xsl:template match="unique" mode="eval-attr"/>
 
 
 <!--+

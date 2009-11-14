@@ -64,8 +64,8 @@
 
   <xsl:choose>
 
+    <!-- Publish objects based on external XML data -->
     <xsl:when test="@select">
-
       <xsl:if test="@list">
 	<xsl:message>Both "list" and "select" attributes are specified in object element; I will ignore list.</xsl:message>
       </xsl:if>
@@ -74,7 +74,6 @@
       <xsl:variable name="abs-path">
 	<xsl:call-template name="combine-paths">
 	  <xsl:with-param name="path" select="@select"/>
-
 	  <xsl:with-param name="rel-path">
 	    <xsl:call-template name="path-stack-find-path">
 	      <xsl:with-param name="path-stack" select="$path-stack"/>
@@ -82,7 +81,6 @@
 	  </xsl:with-param>
 	</xsl:call-template>
       </xsl:variable>
-
 
       <xsl:variable name="count">
 	<xsl:call-template name="count-path">
@@ -96,9 +94,9 @@
 	<xsl:with-param name="abs-path" select="$abs-path"/>
 	<xsl:with-param name="list-item" select="$list-item"/>
       </xsl:call-template>
-
     </xsl:when>
 
+    <!-- Publish objects based on a list of items -->
     <xsl:when test="@list">
       <xsl:choose>
 	<xsl:when test="count(/xylophone/lists/list[@name=current()/@list]) = 0">
@@ -113,6 +111,7 @@
       </xsl:choose>
     </xsl:when>
 	
+    <!-- Publish just one object -->
     <xsl:otherwise>
       <xsl:call-template name="maybe-publish-object-and-children">
  	<xsl:with-param name="path-stack" select="$path-stack"/>
@@ -132,15 +131,16 @@
   <xsl:param name="path-stack"/>
   <xsl:param name="count-done" select="'0'"/>
 
-  <xsl:variable name="count-todo" select="count(/xylophone/lists/list[@name=current()/@list]/item)"/>
+  <xsl:variable name="count-todo"
+		select="count(/xylophone/lists/list[@name=current()/@list]/item)"/>
 
   <xsl:if test="$count-done &lt; $count-todo">
-
     <xsl:variable name="count-done-next" select="number($count-done)+1"/>
 
     <!-- Possibly publish this object -->
     <xsl:call-template name="maybe-publish-object-and-children"> 
-      <xsl:with-param name="list-item" select="/xylophone/lists/list[@name=current()/@list]/item[$count-done-next]"/>
+      <xsl:with-param name="list-item"
+		      select="/xylophone/lists/list[@name=current()/@list]/item[$count-done-next]"/>
       <xsl:with-param name="path-stack" select="$path-stack"/>
     </xsl:call-template>
 
@@ -162,46 +162,60 @@
     +-->
 <xsl:template name="publish-multiple-select-objects">
   <xsl:param name="path-stack"/>
-  <xsl:param name="abs-path"/>
   <xsl:param name="list-item"/>
   <xsl:param name="count-todo"/>
   <xsl:param name="count-done" select="'0'"/>
 
   <xsl:if test="$count-done &lt; $count-todo">
-
     <xsl:variable name="count-done-next" select="number($count-done)+1"/>
 
-    <xsl:variable name="this-obj-path" select="concat($abs-path,'[',$count-done-next,']')"/>
-
-
-    <!-- Add this object's path to path-stack -->
-    <xsl:variable name="path-stack-with-this-object">
-      <xsl:call-template name="path-stack-add">
-	<xsl:with-param name="current-path-stack" select="$path-stack"/>
-	<xsl:with-param name="path" select="$this-obj-path"/>
+    <xsl:variable name="abs-path">
+      <xsl:call-template name="combine-paths">
+	<xsl:with-param name="path" select="@select"/>
+	
+	<xsl:with-param name="rel-path">
+	  <xsl:call-template name="path-stack-find-path">
+	    <xsl:with-param name="path-stack" select="$path-stack"/>
+	  </xsl:call-template>
+	</xsl:with-param>
       </xsl:call-template>
     </xsl:variable>
 
+    <xsl:variable name="this-obj-path"
+		  select="concat($abs-path,'[',$count-done-next,']')"/>
 
-    <!-- Possibly publish this object -->
-    <xsl:call-template name="maybe-publish-object-and-children"> 
-      <xsl:with-param name="path-stack" select="$path-stack-with-this-object"/>
-      <xsl:with-param name="list-item" select="$list-item"/>
-    </xsl:call-template>
+    <!-- Evaluate whether this item is sufficently unique -->
+    <xsl:variable name="is-duplicate-object">
+      <xsl:call-template name="check-duplication-object">
+	<xsl:with-param name="list-item" select="$list-item"/>
+	<xsl:with-param name="path-stack" select="$path-stack"/>
+	<xsl:with-param name="count" select="$count-done-next"/>
+      </xsl:call-template>
+    </xsl:variable>
+
+    <!-- If not a duplicate... -->
+    <xsl:if test="not(normalize-space($is-duplicate-object))">
+      <!-- ... possibly publish this object -->
+      <xsl:call-template name="maybe-publish-object-and-children"> 
+	<xsl:with-param name="path-stack">
+	  <xsl:call-template name="path-stack-add">
+	    <xsl:with-param name="current-path-stack" select="$path-stack"/>
+	    <xsl:with-param name="path" select="$this-obj-path"/>
+	  </xsl:call-template>
+	</xsl:with-param>
+	<xsl:with-param name="list-item" select="$list-item"/>
+      </xsl:call-template>
+    </xsl:if>
 
     <!-- Iterate onto next item -->
     <xsl:call-template name="publish-multiple-select-objects">
       <xsl:with-param name="path-stack" select="$path-stack"/>
-      <xsl:with-param name="abs-path" select="$abs-path"/>
       <xsl:with-param name="list-item" select="$list-item"/>
       <xsl:with-param name="count-todo" select="$count-todo"/>
       <xsl:with-param name="count-done" select="$count-done-next"/>
     </xsl:call-template>
-
   </xsl:if>
-
 </xsl:template>
-
 
 
 <!--+
@@ -299,8 +313,6 @@
     </xsl:otherwise>
   </xsl:choose>
 </xsl:template>
-
-
 
 
 <!--+
@@ -550,34 +562,45 @@
 
     <xsl:variable name="count-done-next" select="number($count-done)+1"/>
 
-    <!-- Compute a new absolute path -->
-    <xsl:variable name="this-attr-path">
-      <xsl:call-template name="combine-paths">
-	<xsl:with-param name="path" select="concat(@select,'[',$count-done-next,']')"/>
-	
-	<xsl:with-param name="rel-path">
-	  <xsl:call-template name="path-stack-find-path">
-	    <xsl:with-param name="path-stack" select="$path-stack"/>
-	    <xsl:with-param name="depth" select="$depth"/>
-	  </xsl:call-template>
-	</xsl:with-param>
+    <!-- Evaluate whether this attr is sufficently unique -->
+    <xsl:variable name="is-duplicate-attr">
+      <xsl:call-template name="check-duplication-attr">
+	<xsl:with-param name="list-item" select="$list-item"/>
+	<xsl:with-param name="path-stack" select="$path-stack"/>
+	<xsl:with-param name="count" select="$count-done-next"/>
       </xsl:call-template>
     </xsl:variable>
 
-    <!-- Possibly publish this object -->
-    <xsl:call-template name="publish-attr"> 
-      <xsl:with-param name="list-item" select="$list-item"/>
-
-      <xsl:with-param name="path-stack">
-	<xsl:call-template name="path-stack-add">
-	  <xsl:with-param name="current-path-stack" select="$path-stack"/>
-	  <xsl:with-param name="path" select="$this-attr-path"/>
-	  <xsl:with-param name="depth" select="$depth"/>
+    <xsl:if test="not(normalize-space($is-duplicate-attr))">
+      <!-- Compute a new absolute path -->
+      <xsl:variable name="this-attr-path">
+	<xsl:call-template name="combine-paths">
+	  <xsl:with-param name="path" select="concat(@select,'[',$count-done-next,']')"/>
+	  
+	  <xsl:with-param name="rel-path">
+	    <xsl:call-template name="path-stack-find-path">
+	      <xsl:with-param name="path-stack" select="$path-stack"/>
+	      <xsl:with-param name="depth" select="$depth"/>
+	    </xsl:call-template>
+	  </xsl:with-param>
 	</xsl:call-template>
-      </xsl:with-param>
+      </xsl:variable>
 
-      <xsl:with-param name="depth" select="$depth"/>
-    </xsl:call-template>
+      <!-- Possibly publish this object -->
+      <xsl:call-template name="publish-attr"> 
+	<xsl:with-param name="list-item" select="$list-item"/>
+
+	<xsl:with-param name="path-stack">
+	  <xsl:call-template name="path-stack-add">
+	    <xsl:with-param name="current-path-stack" select="$path-stack"/>
+	    <xsl:with-param name="path" select="$this-attr-path"/>
+	    <xsl:with-param name="depth" select="$depth"/>
+	  </xsl:call-template>
+	</xsl:with-param>
+
+	<xsl:with-param name="depth" select="$depth"/>
+      </xsl:call-template>
+    </xsl:if>
 
     <!-- Iterate onto next item -->
     <xsl:call-template name="publish-multiple-select-attr">
