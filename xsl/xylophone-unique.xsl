@@ -3,15 +3,15 @@
 <!--+
     | Copyright (c) 2009, Deutsches Elektronen-Synchrotron (DESY)
     | All rights reserved.
-    | 
+    |
     | Redistribution and use in source and binary forms, with
     | or without modification, are permitted provided that the
     | following conditions are met:
-    | 
+    |
     |   o  Redistributions of source code must retain the above
     |      copyright notice, this list of conditions and the
     |      following disclaimer.
-    | 
+    |
     |   o  Redistributions in binary form must reproduce the
     |      above copyright notice, this list of conditions and
     |      the following disclaimer in the documentation and/or
@@ -95,7 +95,7 @@
       <xsl:with-param name="abs-path">
 	<xsl:call-template name="combine-paths">
 	  <xsl:with-param name="path" select="@select"/>
-	
+
 	  <xsl:with-param name="rel-path">
 	    <xsl:call-template name="path-stack-find-path">
 	      <xsl:with-param name="path-stack" select="$path-stack"/>
@@ -196,8 +196,5 @@
       </xsl:choose>
     </xsl:if>
   </xsl:template>
-
-  
-
 
 </xsl:stylesheet>

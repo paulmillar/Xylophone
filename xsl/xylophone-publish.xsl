@@ -3,15 +3,15 @@
 <!--+
     | Copyright (c) 2008, Deutsches Elektronen-Synchrotron (DESY)
     | All rights reserved.
-    | 
+    |
     | Redistribution and use in source and binary forms, with
     | or without modification, are permitted provided that the
     | following conditions are met:
-    | 
+    |
     |   o  Redistributions of source code must retain the above
     |      copyright notice, this list of conditions and the
     |      following disclaimer.
-    | 
+    |
     |   o  Redistributions in binary form must reproduce the
     |      above copyright notice, this list of conditions and
     |      the following disclaimer in the documentation and/or
@@ -110,7 +110,7 @@
 	</xsl:otherwise>
       </xsl:choose>
     </xsl:when>
-	
+
     <!-- Publish just one object -->
     <xsl:otherwise>
       <xsl:call-template name="maybe-publish-object-and-children">
@@ -138,7 +138,7 @@
     <xsl:variable name="count-done-next" select="number($count-done)+1"/>
 
     <!-- Possibly publish this object -->
-    <xsl:call-template name="maybe-publish-object-and-children"> 
+    <xsl:call-template name="maybe-publish-object-and-children">
       <xsl:with-param name="list-item"
 		      select="/xylophone/lists/list[@name=current()/@list]/item[$count-done-next]"/>
       <xsl:with-param name="path-stack" select="$path-stack"/>
@@ -172,7 +172,7 @@
     <xsl:variable name="abs-path">
       <xsl:call-template name="combine-paths">
 	<xsl:with-param name="path" select="@select"/>
-	
+
 	<xsl:with-param name="rel-path">
 	  <xsl:call-template name="path-stack-find-path">
 	    <xsl:with-param name="path-stack" select="$path-stack"/>
@@ -196,7 +196,7 @@
     <!-- If not a duplicate... -->
     <xsl:if test="not(normalize-space($is-duplicate-object))">
       <!-- ... possibly publish this object -->
-      <xsl:call-template name="maybe-publish-object-and-children"> 
+      <xsl:call-template name="maybe-publish-object-and-children">
 	<xsl:with-param name="path-stack">
 	  <xsl:call-template name="path-stack-add">
 	    <xsl:with-param name="current-path-stack" select="$path-stack"/>
@@ -223,7 +223,7 @@
     |    a rel-path, we check whether the <suppress/> <allow/> setting
     |    proscribe or allow publishing this object.
     |
-    |    If we should publish this object, publish this object and 
+    |    If we should publish this object, publish this object and
     |    evaluate publishing all child objects.
     |
     |    If we should not publish this object, do not publish this object
@@ -334,7 +334,7 @@
   <!-- Publish any child objects -->
   <xsl:apply-templates select="object" mode="publish">
     <xsl:with-param name="path-stack" select="$path-stack"/>
-    <xsl:with-param name="list-item" select="$list-item"/>    
+    <xsl:with-param name="list-item" select="$list-item"/>
   </xsl:apply-templates>
 </xsl:template>
 
@@ -414,7 +414,7 @@
       <xsl:call-template name="output-objectClass">
 	<xsl:with-param name="name" select="substring-before($classes, ' ')"/>
       </xsl:call-template>
-    
+
       <!-- Iterate to next class -->
       <xsl:call-template name="output-objectClass-attributes">
 	<xsl:with-param name="classes" select="substring-after($classes, ' ')"/>
@@ -576,7 +576,7 @@
       <xsl:variable name="this-attr-path">
 	<xsl:call-template name="combine-paths">
 	  <xsl:with-param name="path" select="concat(@select,'[',$count-done-next,']')"/>
-	  
+
 	  <xsl:with-param name="rel-path">
 	    <xsl:call-template name="path-stack-find-path">
 	      <xsl:with-param name="path-stack" select="$path-stack"/>
@@ -587,7 +587,7 @@
       </xsl:variable>
 
       <!-- Possibly publish this object -->
-      <xsl:call-template name="publish-attr"> 
+      <xsl:call-template name="publish-attr">
 	<xsl:with-param name="list-item" select="$list-item"/>
 
 	<xsl:with-param name="path-stack">
@@ -632,7 +632,7 @@
     <xsl:variable name="count-done-next" select="number($count-done)+1"/>
 
     <!-- Possibly publish this object -->
-    <xsl:call-template name="publish-attr"> 
+    <xsl:call-template name="publish-attr">
       <xsl:with-param name="path-stack" select="$path-stack"/>
       <xsl:with-param name="depth" select="$depth"/>
       <xsl:with-param name="list-item" select="/xylophone/lists/list[@name=current()/@list]/item[$count-done-next]"/>
@@ -644,7 +644,7 @@
       <xsl:with-param name="depth" select="$depth"/>
       <xsl:with-param name="count-done" select="$count-done-next"/>
     </xsl:call-template>
-  </xsl:if>  
+  </xsl:if>
 </xsl:template>
 
 
@@ -696,7 +696,7 @@
 <!--+
     |  Iterate, expanding any special elements within an attribute's name.
     |
-    |    list-item => an item's list. 
+    |    list-item => an item's list.
     +-->
 <xsl:template name="expand-attr-name">
   <xsl:param name="list-item"/>
@@ -749,7 +749,7 @@
 
     <!-- Otherwise, just the one class left -->
     <xsl:otherwise>
-      <xsl:apply-templates select="/xylophone/classes/class[@name=$classes]/attr" mode="publish">  
+      <xsl:apply-templates select="/xylophone/classes/class[@name=$classes]/attr" mode="publish">
 	<xsl:with-param name="list-item" select="$list-item"/>
 	<xsl:with-param name="path-stack" select="$path-stack"/>
 	<xsl:with-param name="depth" select="count(ancestor-or-self::object)"/>
@@ -853,7 +853,7 @@
     <xsl:when test="not(@rdn)">
       <xsl:message>Missing attribute "rdn" for object.</xsl:message>
     </xsl:when>
-	
+
     <xsl:when test="not(normalize-space(@rdn))">
       <xsl:message>Empty attribute "rdn" for object.</xsl:message>
     </xsl:when>
