@@ -61,6 +61,7 @@
 <xsl:template match="object" mode="publish">
   <xsl:param name="list-item"/>
   <xsl:param name="path-stack"/>
+  <xsl:param name="parent-dn"/>
 
   <xsl:choose>
 
@@ -93,6 +94,7 @@
 	<xsl:with-param name="path-stack" select="$path-stack"/>
 	<xsl:with-param name="abs-path" select="$abs-path"/>
 	<xsl:with-param name="list-item" select="$list-item"/>
+	<xsl:with-param name="parent-dn" select="$parent-dn"/>
       </xsl:call-template>
     </xsl:when>
 
@@ -106,6 +108,7 @@
 	<xsl:otherwise>
 	  <xsl:call-template name="publish-multiple-list-objects">
 	    <xsl:with-param name="path-stack" select="$path-stack"/>
+	    <xsl:with-param name="parent-dn" select="$parent-dn"/>
 	  </xsl:call-template>
 	</xsl:otherwise>
       </xsl:choose>
@@ -115,6 +118,7 @@
     <xsl:otherwise>
       <xsl:call-template name="maybe-publish-object-and-children">
  	<xsl:with-param name="path-stack" select="$path-stack"/>
+	<xsl:with-param name="parent-dn" select="$parent-dn"/>
       </xsl:call-template>
     </xsl:otherwise>
   </xsl:choose>
@@ -129,6 +133,7 @@
     +-->
 <xsl:template name="publish-multiple-list-objects">
   <xsl:param name="path-stack"/>
+  <xsl:param name="parent-dn"/>
   <xsl:param name="count-done" select="'0'"/>
 
   <xsl:variable name="count-todo"
@@ -142,12 +147,14 @@
       <xsl:with-param name="list-item"
 		      select="/xylophone/lists/list[@name=current()/@list]/item[$count-done-next]"/>
       <xsl:with-param name="path-stack" select="$path-stack"/>
+      <xsl:with-param name="parent-dn" select="$parent-dn"/>
     </xsl:call-template>
 
     <!-- Iterate onto next item -->
     <xsl:call-template name="publish-multiple-list-objects">
       <xsl:with-param name="count-done" select="$count-done-next"/>
       <xsl:with-param name="path-stack" select="$path-stack"/>
+      <xsl:with-param name="parent-dn" select="$parent-dn"/>
     </xsl:call-template>
   </xsl:if>
 
@@ -164,6 +171,7 @@
   <xsl:param name="path-stack"/>
   <xsl:param name="list-item"/>
   <xsl:param name="count-todo"/>
+  <xsl:param name="parent-dn"/>
   <xsl:param name="count-done" select="'0'"/>
 
   <xsl:if test="$count-done &lt; $count-todo">
@@ -204,6 +212,7 @@
 	  </xsl:call-template>
 	</xsl:with-param>
 	<xsl:with-param name="list-item" select="$list-item"/>
+	<xsl:with-param name="parent-dn" select="$parent-dn"/>
       </xsl:call-template>
     </xsl:if>
 
@@ -213,6 +222,7 @@
       <xsl:with-param name="list-item" select="$list-item"/>
       <xsl:with-param name="count-todo" select="$count-todo"/>
       <xsl:with-param name="count-done" select="$count-done-next"/>
+      <xsl:with-param name="parent-dn" select="$parent-dn"/>
     </xsl:call-template>
   </xsl:if>
 </xsl:template>
@@ -230,6 +240,7 @@
     |    and do not evaluate publishing any child objects.
     +-->
 <xsl:template name="maybe-publish-object-and-children">
+  <xsl:param name="parent-dn"/>
   <xsl:param name="path-stack"/>
   <xsl:param name="list-item"/>
 
@@ -246,6 +257,7 @@
     <xsl:call-template name="publish-object-and-children">
       <xsl:with-param name="path-stack" select="$path-stack"/>
       <xsl:with-param name="list-item" select="$list-item"/>
+      <xsl:with-param name="parent-dn" select="$parent-dn"/>
     </xsl:call-template>
   </xsl:if>
 </xsl:template>
@@ -321,13 +333,24 @@
     |  objects
     +-->
 <xsl:template name="publish-object-and-children">
+  <xsl:param name="parent-dn"/>
   <xsl:param name="path-stack"/>
   <xsl:param name="list-item"/>
+
+  <xsl:variable name="our-dn">
+    <xsl:apply-templates select="." mode="build-DN">
+      <xsl:with-param name="path-stack" select="$path-stack"/>
+      <xsl:with-param name="list-item" select="$list-item"/>
+      <xsl:with-param name="parent-dn" select="$parent-dn"/>
+    </xsl:apply-templates>
+  </xsl:variable>
+
 
   <xsl:if test="not(@hidden)">
     <xsl:call-template name="publish-object">
       <xsl:with-param name="path-stack" select="$path-stack"/>
       <xsl:with-param name="list-item" select="$list-item"/>
+      <xsl:with-param name="dn" select="$our-dn"/>
     </xsl:call-template>
   </xsl:if>
 
@@ -335,6 +358,7 @@
   <xsl:apply-templates select="object" mode="publish">
     <xsl:with-param name="path-stack" select="$path-stack"/>
     <xsl:with-param name="list-item" select="$list-item"/>
+    <xsl:with-param name="parent-dn" select="$our-dn"/>
   </xsl:apply-templates>
 </xsl:template>
 
@@ -349,38 +373,31 @@
 <xsl:template name="publish-object">
   <xsl:param name="path-stack"/>
   <xsl:param name="list-item"/>
+  <xsl:param name="dn"/>
 
   <xsl:call-template name="output-empty-line"/>
 
   <!-- Optionally emit an explicit comment -->
-  <xsl:if test="@comment">
-    <xsl:call-template name="output-comment">
-      <xsl:with-param name="text" select="@comment"/>
-    </xsl:call-template>
-  </xsl:if>
+  <xsl:apply-templates select="@comment" mode="emit-as-comment"/>
 
   <!-- Emit object DN -->
   <xsl:call-template name="output-raw-attribute">
     <xsl:with-param name="key" select="'dn'"/>
-    <xsl:with-param name="value">
-      <xsl:apply-templates select="." mode="build-DN">
-	<xsl:with-param name="path-stack" select="$path-stack"/>
-	<xsl:with-param name="list-item" select="$list-item"/>
-      </xsl:apply-templates>
-    </xsl:with-param>
+    <xsl:with-param name="value" select="$dn"/>
   </xsl:call-template>
 
-  <!-- Emit the objectClass attribute list -->
+  <!-- If the user has supplied any classes -->
   <xsl:if test="@classes">
-    <xsl:call-template name="output-objectClass-attributes">
-      <xsl:with-param name="classes" select="normalize-space(@classes)"/>
-    </xsl:call-template>
-  </xsl:if>
+    <xsl:variable name="norm-classes" select="normalize-space(@classes)"/>
 
-  <!-- Emit the objectClass-derived attributes -->
-  <xsl:if test="@classes">
+    <!-- Emit the objectClass attribute list -->
+    <xsl:call-template name="output-objectClass-attributes">
+      <xsl:with-param name="classes" select="$norm-classes"/>
+    </xsl:call-template>
+
+    <!-- Emit the objectClass-derived attributes -->
     <xsl:call-template name="publish-all-classes-attr">
-      <xsl:with-param name="classes" select="normalize-space(@classes)"/>
+      <xsl:with-param name="classes" select="$norm-classes"/>
       <xsl:with-param name="path-stack" select="$path-stack"/>
       <xsl:with-param name="list-item" select="$list-item"/>
     </xsl:call-template>
@@ -685,8 +702,8 @@
   <!-- Publish, unless it is empty and we should suppress empty output -->
   <xsl:if test="(not(@not-empty) or @not-empty = '0' or normalize-space($value)) and not(normalize-space($suppress-result))">
     <xsl:call-template name="output-attribute">
-      <xsl:with-param name="key" select="$name"/>
-      <xsl:with-param name="value" select="$value"/>
+      <xsl:with-param name="key" select="string($name)"/>
+      <xsl:with-param name="value" select="string($value)"/>
     </xsl:call-template>
   </xsl:if>
 
@@ -776,20 +793,16 @@
 <xsl:template match="object" mode="build-DN">
   <xsl:param name="path-stack"/>
   <xsl:param name="list-item"/>
+  <xsl:param name="parent-dn"/>
 
   <xsl:apply-templates select="." mode="emit-RDN-for-DN">
     <xsl:with-param name="path-stack" select="$path-stack"/>
     <xsl:with-param name="list-item" select="$list-item"/>
   </xsl:apply-templates>
 
-  <xsl:if test="count(ancestor::object)>0">
-    <xsl:text>,</xsl:text>
+  <xsl:if test="string-length($parent-dn)>0">
+    <xsl:value-of select="concat(',',$parent-dn)"/>
   </xsl:if>
-
-  <xsl:apply-templates select="ancestor::object[1]" mode="build-DN">
-    <xsl:with-param name="path-stack" select="$path-stack"/>
-    <xsl:with-param name="list-item" select="$list-item"/>
-  </xsl:apply-templates>
 </xsl:template>
 
 
@@ -924,7 +937,6 @@
     </xsl:otherwise>
   </xsl:choose>
 </xsl:template>
-
 
 
 

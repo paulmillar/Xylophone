@@ -96,6 +96,16 @@
 
 
 <!--+
+    |  Output a comment line.  This may wrap if it's too long.
+    +-->
+<xsl:template match="*|@*|text()" mode="emit-as-comment">
+  <xsl:call-template name="output-line">
+    <xsl:with-param name="text">#  <xsl:value-of select="."/></xsl:with-param>
+  </xsl:call-template>
+</xsl:template>
+
+
+<!--+
     |  Output a line of text, wrapping as necessary.
     +-->
 <xsl:template name="output-line">
