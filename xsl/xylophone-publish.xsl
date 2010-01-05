@@ -350,7 +350,7 @@
   <xsl:param name="path-stack"/>
   <xsl:param name="list-item"/>
 
-  <xsl:call-template name="output-EOL"/>
+  <xsl:call-template name="output-empty-line"/>
 
   <!-- Optionally emit an explicit comment -->
   <xsl:if test="@comment">
