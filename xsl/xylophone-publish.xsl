@@ -338,11 +338,11 @@
   <xsl:param name="list-item"/>
 
   <xsl:variable name="our-dn">
-    <xsl:apply-templates select="." mode="build-DN">
+    <xsl:call-template name="build-DN">
       <xsl:with-param name="path-stack" select="$path-stack"/>
       <xsl:with-param name="list-item" select="$list-item"/>
       <xsl:with-param name="parent-dn" select="$parent-dn"/>
-    </xsl:apply-templates>
+    </xsl:call-template>
   </xsl:variable>
 
 
@@ -777,28 +777,17 @@
 
 
 <!--+
-    |
-    |  HOW WE BUILD THE DN:
-    |
-    |     In mode build-DN, we recursive upwards:
-    |            o  build object RDN
-    |            o  add a comma, if there is a parent object
-    |            o  recurse.
+    |  Emit the current object's DN
     +-->
-
-
-<!--+
-    |    Emit the current object's DN
-    +-->
-<xsl:template match="object" mode="build-DN">
+<xsl:template name="build-DN">
   <xsl:param name="path-stack"/>
   <xsl:param name="list-item"/>
   <xsl:param name="parent-dn"/>
 
-  <xsl:apply-templates select="." mode="emit-RDN-for-DN">
+  <xsl:call-template name="emit-RDN-for-DN">
     <xsl:with-param name="path-stack" select="$path-stack"/>
     <xsl:with-param name="list-item" select="$list-item"/>
-  </xsl:apply-templates>
+  </xsl:call-template>
 
   <xsl:if test="string-length($parent-dn)>0">
     <xsl:value-of select="concat(',',$parent-dn)"/>
@@ -808,10 +797,8 @@
 
 <!--+
     |  Emit the current object's RDN suitable for part of a DN.
-    |
-    |  We emit the RDN value with appropriate markup.
     +-->
-<xsl:template match="object" mode="emit-RDN-for-DN">
+<xsl:template name="emit-RDN-for-DN">
   <xsl:param name="path-stack"/>
   <xsl:param name="list-item"/>
 
@@ -829,9 +816,7 @@
 
 
 <!--+
-    |  Emit the current object's RDN suitable as a value
-    |
-    |  We emit the RDN value with appropriate markup.
+    |  Emit the current object's RDN without any markup.
     +-->
 <xsl:template match="object" mode="emit-RDN-for-attribute">
   <xsl:param name="path-stack"/>
@@ -913,12 +898,14 @@
     <!--  Multiple classes still to process -->
     <xsl:when test="contains( $classes, ' ')">
 
-      <xsl:apply-templates select="/xylophone/classes/class[@name=substring-before($classes, ' ')]/attr[@name=$name]" mode="eval-attr">
+      <xsl:apply-templates select="/xylophone/classes/class[@name=substring-before($classes, ' ')]/attr[@name=$name]"
+			   mode="eval-attr">
 	<xsl:with-param name="path-stack" select="$path-stack"/>
 	<xsl:with-param name="depth" select="count(ancestor-or-self::object)"/>
 	<xsl:with-param name="list-item" select="$list-item"/>
       </xsl:apply-templates>
 
+      <!-- Iterate onto the next one -->
       <xsl:call-template name="hunt-all-classes-for-attr">
 	<xsl:with-param name="classes" select="substring-after($classes, ' ')"/>
 	<xsl:with-param name="path-stack" select="$path-stack"/>
@@ -929,7 +916,8 @@
 
     <!-- Otherwise, just the one class left -->
     <xsl:otherwise>
-      <xsl:apply-templates select="/xylophone/classes/class[@name=$classes]/attr[@name=$name]" mode="eval-attr">
+      <xsl:apply-templates select="/xylophone/classes/class[@name=$classes]/attr[@name=$name]"
+			   mode="eval-attr">
 	<xsl:with-param name="path-stack" select="$path-stack"/>
 	<xsl:with-param name="depth" select="count(ancestor-or-self::object)"/>
 	<xsl:with-param name="list-item" select="$list-item"/>
