@@ -5,81 +5,103 @@ from ldif import LDIFParser, LDIFWriter, LDIFRecordList
 
 class LDIFVerifier():
     """
-    Check that two LDIF files contain equivalent LDAP information.
+    Check that two LDIF files contain equivalent LDAP information.  If they
+    don't, emit a summary of the differences
     """
 
-    def __init__( self, in_file_1, in_file_2):
+    def __init__( self, file1, file2):
         """
         Parameters:
-        in_file_1
+        file1
             filename of first file to read
-        in_file_2
+        file2
             filename of second file to read
         """
-        self._src_1 = LDIFRecordList(open(in_file_1))
-        self._src_2 = LDIFRecordList(open(in_file_2))
+        self.src1 = LDIFRecordList(open(file1))
+        self.src2 = LDIFRecordList(open(file2))
 
-    def findRecord( self, list, dn):
-        """
-        Find a record with given dn, or None if no such record exists.
-        """
-        for record in list:
-            recordDn,recordValueSet = record
-            if recordDn == dn:
-                return record
-        return None
 
-    def emitDifferingValues( self, valSet1, valSet2):
+    def emitDifferingValues( self, attributes1, attributes2):
         """
-        Emit all differences between two value-sets
+        Emit a description of the differences between two dictionaries of attribute values
         """
-        #union = valSet1 + ...
-        for k , values1 in valSet1.iteritems():
-            values2 = valSet2[k]
-            if values1 != values2:
-                print "  " + k + ": " + str(values1) + " != " + str(values2)
-
-    def emitDifferences( self, list1, list2):
-        """
-        Emit all differences between list1 and list2
-        """
-        #union = list1 + list2
-        for record1 in list1:
-            dn,valueSet1 = record1
-            record2 = self.findRecord( list2, dn)
-            if record2:
-                dn2,valueSet2 = record2
-                if( valueSet1 != valueSet2):
-                    print dn + ": "
-                    self.emitDifferingValues( valueSet1, valueSet2)
+        for attributeName, attributeValues1 in attributes1.iteritems():
+            if attributeName in attributes2:
+                attributeValues2 = attributes2[attributeName]
+                if attributeValues1 != attributeValues2:
+                    print "        " + attributeName + ": " + str(attributeValues1) + " != " + str(attributeValues2)
             else:
-                print "Missing second corresponding"
-                self.printRecord( record1)
+                print "        " + attributeName + ": missing in second file"
+
+    def emitDifferences( self, summary1, summary2):
+        """
+        Emit all differences between the two LDAP objects.  The
+        supplied parameters are dictionaries between the object DN and
+        a list of attributes
+        """
+        count = 0
+        for dnLower,wrappedObject1 in summary1.iteritems():
+            (dn,attributes1) = wrappedObject1
+            if dnLower in summary2:
+                wrappedObject2 = summary2 [dnLower]
+                (dn2,attributes2) = wrappedObject2
+                if( attributes1 != attributes2):
+                    count += 1
+                    print "\n    dn: " + dn
+                    print "        [difference in attribute values]\n"
+                    self.emitDifferingValues( attributes1, attributes2)
+            else:
+                count += 1
+                print "\n    dn: " + dn
+                print "        [object missing in second file]\n"
+                self.printSummary( dn, attributes1)
+
+        for dnLower,wrappedObject2 in summary2.iteritems():
+            (dn,attributes2) = wrappedObject2
+            if not dnLower in summary1:
+                count += 1
+                print "\n    dn: " + dn
+                print "        [object missing in first file]\n"
+                self.printSummary( dn, attributes2)
+        return count
 
 
-    def printRecord( self, record):
+    def printSummary( self, dn, attributes):
         """
-        Print a record
+        Print a complete LDAP object
         """
-        dn,value = record
-        print "dn: " + dn
-        for k, v in value.iteritems():
-            print "  " + k + ": " + v [0]
-            if( len(v) > 1):
-                for val in v[1:]:
-                    print "      " + val
+        for attributeName, attributeValues in attributes.iteritems():
+            for attributeValue in attributeValues:
+                print "        " + attributeName + ": " + attributeValue
+
+    def buildSummary( self, records):
+        """
+        Build 
+        """
+        summary = {}
+
+        for record in records:
+            dn,attributes = record
+            summary [dn.lower()] = (dn,attributes)
+
+        return summary
 
 
     def compare( self):
         """
         Check whether the two named files are equal.
         """
-        self._src_1.parse()
-        self._src_2.parse()
+        self.src1.parse()
 
-        if( self._src_1.all_records != self._src_2.all_records):
-            self.emitDifferences( self._src_1.all_records, self._src_2.all_records)
-            sys.exit("Differences detected")
+        summary1 = self.buildSummary( self.src1.all_records)
+
+        self.src2.parse()
+
+        summary2 = self.buildSummary( self.src2.all_records)
+
+        count = self.emitDifferences( summary1, summary2)
+        if( count > 0):
+            exit(1)
 
 if( len(sys.argv) != 3):
   sys.exit("Need two arguments")
