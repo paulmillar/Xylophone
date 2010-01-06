@@ -1,26 +1,26 @@
-dn: innerItem=foo,outerItem=foo
+dn: innerItem=foo,outerItem=Foo
 innerItem: foo
 
-dn: innerItem=bar,outerItem=bar
+dn: innerItem=bar,outerItem=Foo
 innerItem: bar
 
-dn: innerItem=baz,outerItem=baz
+dn: innerItem=baz,outerItem=Foo
 innerItem: baz
 
-dn: innerItem=foo,outerItem=foo
+dn: innerItem=foo,outerItem=Bar
 innerItem: foo
 
-dn: innerItem=bar,outerItem=bar
+dn: innerItem=bar,outerItem=Bar
 innerItem: bar
 
-dn: innerItem=baz,outerItem=baz
+dn: innerItem=baz,outerItem=Bar
 innerItem: baz
 
-dn: innerItem=foo,outerItem=foo
+dn: innerItem=foo,outerItem=Baz
 innerItem: foo
 
-dn: innerItem=bar,outerItem=bar
+dn: innerItem=bar,outerItem=Baz
 innerItem: bar
 
-dn: innerItem=baz,outerItem=baz
+dn: innerItem=baz,outerItem=Baz
 innerItem: baz
