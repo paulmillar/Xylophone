@@ -60,7 +60,7 @@
     <xsl:with-param name="key" select="$key"/>
     <xsl:with-param name="value">
       <xsl:call-template name="markup-attribute-value">
-	<xsl:with-param name="value" select="$value"/>
+        <xsl:with-param name="value" select="$value"/>
       </xsl:call-template>
     </xsl:with-param>
   </xsl:call-template>
@@ -116,7 +116,7 @@
       <xsl:value-of select="concat(substring($text,1,75),'&#xA; ')"/>
 
       <xsl:call-template name="output-partial-line">
-	<xsl:with-param name="text" select="substring($text,76)"/>
+        <xsl:with-param name="text" select="substring($text,76)"/>
       </xsl:call-template>
     </xsl:when>
 
@@ -135,7 +135,7 @@
       <xsl:value-of select="concat(substring($text,1,74),'&#xA; ')"/>
 
       <xsl:call-template name="output-partial-line">
-	<xsl:with-param name="text" select="substring($text,75)"/>
+        <xsl:with-param name="text" select="substring($text,75)"/>
       </xsl:call-template>
     </xsl:when>
 

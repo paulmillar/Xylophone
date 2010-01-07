@@ -47,8 +47,8 @@
 
 <xsl:stylesheet version="1.0"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-		xmlns:date="http://exslt.org/dates-and-times"
-		extension-element-prefixes="date">
+                xmlns:date="http://exslt.org/dates-and-times"
+                extension-element-prefixes="date">
 
 
 <!-- TODO: what is the MIME media type for LDIF?  This seems poorly
@@ -101,9 +101,9 @@
   <xsl:choose>
     <xsl:when test="function-available('date:date-time')">
       <xsl:call-template name="output-comment">
-	<xsl:with-param name="text">
-	  <xsl:value-of select="concat(' at: ', date:date-time())" />
-	</xsl:with-param>
+        <xsl:with-param name="text">
+          <xsl:value-of select="concat(' at: ', date:date-time())" />
+        </xsl:with-param>
       </xsl:call-template>
     </xsl:when>
 
@@ -113,10 +113,6 @@
   </xsl:choose>
 
   <xsl:call-template name="output-comment"/>
-
 </xsl:template>
 
-
 </xsl:stylesheet>
-
-
