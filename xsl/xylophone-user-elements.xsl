@@ -51,8 +51,8 @@
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 version='1.0'
-		xmlns:exsl="http://exslt.org/common"
-		extension-element-prefixes="exsl">
+                xmlns:exsl="http://exslt.org/common"
+                extension-element-prefixes="exsl">
 
 <!--+
     |
@@ -106,8 +106,7 @@
   <xsl:param name="path-stack"/>
   <xsl:param name="list-item"/>
 
-  <!-- Extract our rel-path -->
-  <xsl:variable name="rel-path">
+  <xsl:variable name="current-path">
     <xsl:call-template name="path-stack-find-path">
       <xsl:with-param name="path-stack" select="$path-stack"/>
       <xsl:with-param name="depth" select="$depth"/>
@@ -116,107 +115,66 @@
 
 
   <!-- Figure out what our default should be -->
-  <xsl:variable name="default-result">
+  <xsl:variable name="default-value">
     <xsl:choose>
       <xsl:when test="count(@default) &gt; 0">
-	<xsl:value-of select="@default"/>
+        <xsl:value-of select="@default"/>
       </xsl:when>
 
       <xsl:when test="not(@child) or @child='default'">
-	<xsl:apply-templates mode="eval-attr">
-	  <xsl:with-param name="rel-path" select="$rel-path"/>
-	  <xsl:with-param name="list-item" select="$list-item"/>
-	</xsl:apply-templates>
+        <xsl:apply-templates mode="eval-attr">
+          <xsl:with-param name="rel-path" select="$current-path"/>
+          <xsl:with-param name="list-item" select="$list-item"/>
+        </xsl:apply-templates>
       </xsl:when>
 
       <xsl:when test="@child='path'">
-	<!-- Our default is empty... -->
+        <!-- Our default is empty... -->
       </xsl:when>
 
       <xsl:otherwise>
-	<xsl:message>Unknown "child" attribute value &quot;<xsl:value-of select="@child"/>&quot; in lookup element.</xsl:message>
+        <xsl:message>Unknown "child" attribute value &quot;<xsl:value-of select="@child"/>&quot; in lookup element.</xsl:message>
       </xsl:otherwise>
-      <!-- Otherwise, we have no default -->
     </xsl:choose>
   </xsl:variable>
 
-  <xsl:variable name="raw-path">
+  <xsl:variable name="lookup-path">
     <xsl:choose>
-      <xsl:when test="@path">
-	<!-- Calculate the absolute path -->
-	<xsl:call-template name="combine-paths">
-	  <xsl:with-param name="rel-path" select="$rel-path"/>
-	  <xsl:with-param name="path" select="@path"/>
-	</xsl:call-template>
-      </xsl:when>
+      <xsl:when test="@path"><xsl:value-of select="@path"/></xsl:when>
 
       <xsl:when test="@child = 'path'">
-
-	<!-- Calculate the absolute path -->
-	<xsl:call-template name="combine-paths">
-	  <xsl:with-param name="rel-path" select="$rel-path"/>
-
-	  <!-- Calculate the path from child elements -->
-          <xsl:with-param name="path">
-            <xsl:apply-templates mode="eval-attr">
-              <xsl:with-param name="path-stack" select="$path-stack"/>
-	      <xsl:with-param name="depth" select="$depth"/>
-              <xsl:with-param name="list-item" select="$list-item"/>
-	    </xsl:apply-templates>
-          </xsl:with-param>
-        </xsl:call-template>
+        <xsl:apply-templates mode="eval-attr">
+          <xsl:with-param name="path-stack" select="$path-stack"/>
+          <xsl:with-param name="depth" select="$depth"/>
+          <xsl:with-param name="list-item" select="$list-item"/>
+        </xsl:apply-templates>
       </xsl:when>
 
       <xsl:otherwise>
-	<xsl:message>Missing path in lookup element</xsl:message>
+        <xsl:message>Missing path in lookup element</xsl:message>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:variable>
-
-  <xsl:variable name="path" select="normalize-space($raw-path)"/>
 
   <!-- Build our result -->
   <xsl:variable name="result">
     <xsl:choose>
 
       <!-- Check we actually have a decent path defn. -->
-      <xsl:when test="not(normalize-space($path))">
-	<xsl:message>Empty path found for lookup element, using default.</xsl:message>
-	<xsl:value-of select="$default-result"/>
+      <xsl:when test="not(normalize-space($lookup-path))">
+        <xsl:message>Empty path found for lookup element, using default.</xsl:message>
+        <xsl:value-of select="$default-value"/>
       </xsl:when>
 
-      <!-- Paths that begin with a '/' are always absolute -->
-      <xsl:when test="starts-with($path, '/')">
-	<xsl:call-template name="eval-path">
-	  <xsl:with-param name="path" select="substring($path,2)"/>
-	  <xsl:with-param name="default" select="$default-result"/>
-	</xsl:call-template>
-      </xsl:when>
-
-      <!-- Other paths are assumed to be relative to current context -->
       <xsl:otherwise>
-
-	<xsl:variable name="constructed-path">
-	  <xsl:choose>
-	    <xsl:when test="$rel-path">
-	      <xsl:value-of select="concat($rel-path,'/',$path)"/>
-	    </xsl:when>
-
-	    <xsl:otherwise>
-	      <xsl:value-of select="$path"/>
-	    </xsl:otherwise>
-	  </xsl:choose>
-	</xsl:variable>
-
-	<xsl:call-template name="eval-path">
-	  <xsl:with-param name="path" select="$constructed-path"/>
-	  <xsl:with-param name="default" select="$default-result"/>
-	</xsl:call-template>
-
+        <xsl:call-template name="eval-path">
+          <xsl:with-param name="current-path" select="$current-path"/>
+          <xsl:with-param name="lookup-path" select="$lookup-path"/>
+          <xsl:with-param name="default-value" select="$default-value"/>
+        </xsl:call-template>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:variable>
-
 
   <!-- Optionally, normalise it -->
   <xsl:choose>
@@ -257,47 +215,47 @@
     <xsl:when test="/xylophone/scale/factor[@name=current()/@factor]">
 
       <xsl:variable name="factor">
-	<xsl:value-of select="/xylophone/scale/factor[@name=current()/@factor]"/>
+        <xsl:value-of select="/xylophone/scale/factor[@name=current()/@factor]"/>
       </xsl:variable>
 
       <xsl:variable name="mode">
-	<xsl:value-of select="/xylophone/scale/factor[@name=current()/@factor]/@mode"/>
+        <xsl:value-of select="/xylophone/scale/factor[@name=current()/@factor]/@mode"/>
       </xsl:variable>
 
       <xsl:variable name="result">
-	<xsl:choose>
-	  <xsl:when test="$mode = 'divide'">
-	    <xsl:value-of select="number($value) div number($factor)"/>
-	  </xsl:when>
+        <xsl:choose>
+          <xsl:when test="$mode = 'divide'">
+            <xsl:value-of select="number($value) div number($factor)"/>
+          </xsl:when>
 
-	  <xsl:when test="$mode = 'multiply'">
-	    <xsl:value-of select="number($value) * number($factor)"/>
-	  </xsl:when>
+          <xsl:when test="$mode = 'multiply'">
+            <xsl:value-of select="number($value) * number($factor)"/>
+          </xsl:when>
 
-	  <xsl:otherwise>
-	    <xsl:message>Unknown mode: &quot;<xsl:value-of select="$mode"/>&quot;</xsl:message>
-	    <xsl:value-of select="$value"/>
-	  </xsl:otherwise>
-	</xsl:choose>
+          <xsl:otherwise>
+            <xsl:message>Unknown mode: &quot;<xsl:value-of select="$mode"/>&quot;</xsl:message>
+            <xsl:value-of select="$value"/>
+          </xsl:otherwise>
+        </xsl:choose>
       </xsl:variable>
 
       <xsl:choose>
-	<xsl:when test="@to-integer='round'">
-	  <xsl:value-of select="round($result)"/>
-	</xsl:when>
-	<xsl:when test="@to-integer='floor'">
-	  <xsl:value-of select="floor($result)"/>
-	</xsl:when>
-	<xsl:when test="@to-integer='ceiling'">
-	  <xsl:value-of select="ceiling($result)"/>
-	</xsl:when>
-	<xsl:when test="count(@to-integer)=0">
-	  <xsl:value-of select="$result"/>
-	</xsl:when>
-	<xsl:otherwise>
-	  <xsl:message>Unknown "to-integer" attribute value &quot;<xsl:value-of select="@toInteger"/>&quot; in scale element</xsl:message>
-	  <xsl:value-of select="$result"/>
-	</xsl:otherwise>
+        <xsl:when test="@to-integer='round'">
+          <xsl:value-of select="round($result)"/>
+        </xsl:when>
+        <xsl:when test="@to-integer='floor'">
+          <xsl:value-of select="floor($result)"/>
+        </xsl:when>
+        <xsl:when test="@to-integer='ceiling'">
+          <xsl:value-of select="ceiling($result)"/>
+        </xsl:when>
+        <xsl:when test="count(@to-integer)=0">
+          <xsl:value-of select="$result"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:message>Unknown "to-integer" attribute value &quot;<xsl:value-of select="@toInteger"/>&quot; in scale element</xsl:message>
+          <xsl:value-of select="$result"/>
+        </xsl:otherwise>
       </xsl:choose>
 
     </xsl:when>
@@ -335,7 +293,7 @@
 
   <!-- Select the nearest ancestor object that has a matching rdn -->
   <xsl:apply-templates select="ancestor::object[@rdn=current()/@rdn][1]"
-		       mode="emit-RDN-for-attribute">
+                       mode="emit-RDN-for-attribute">
     <xsl:with-param name="path-stack" select="$path-stack"/>
     <xsl:with-param name="list-item" select="$list-item"/>
   </xsl:apply-templates>
@@ -379,12 +337,12 @@
   <xsl:choose>
     <xsl:when test="@path">
       <xsl:call-template name="sum-path">
-	<xsl:with-param name="rel-path">
-	  <xsl:call-template name="path-stack-find-path">
-	    <xsl:with-param name="path-stack" select="$path-stack"/>
-	    <xsl:with-param name="depth" select="$depth"/>
-	  </xsl:call-template>
-	</xsl:with-param>
+        <xsl:with-param name="rel-path">
+          <xsl:call-template name="path-stack-find-path">
+            <xsl:with-param name="path-stack" select="$path-stack"/>
+            <xsl:with-param name="depth" select="$depth"/>
+          </xsl:call-template>
+        </xsl:with-param>
       </xsl:call-template>
 
     </xsl:when>
@@ -392,11 +350,11 @@
     <xsl:otherwise>
       <!-- Expand terms as a result tree fragment with term elements -->
       <xsl:variable name="sumTerms">
-	<xsl:apply-templates select="term" mode="eval-sum-terms">
-	  <xsl:with-param name="path-stack" select="$path-stack"/>
-	  <xsl:with-param name="depth" select="$depth"/>
-	  <xsl:with-param name="list-item" select="$list-item"/>
-	</xsl:apply-templates>
+        <xsl:apply-templates select="term" mode="eval-sum-terms">
+          <xsl:with-param name="path-stack" select="$path-stack"/>
+          <xsl:with-param name="depth" select="$depth"/>
+          <xsl:with-param name="list-item" select="$list-item"/>
+        </xsl:apply-templates>
       </xsl:variable>
 
       <xsl:value-of select="sum(exsl:node-set($sumTerms)/term)"/>
@@ -454,7 +412,7 @@
   <xsl:variable name="rel-value">
     <xsl:if test="normalize-space($rel-path)">
       <xsl:call-template name="count-path">
-	<xsl:with-param name="path" select="concat($rel-path,'/',@path)"/>
+        <xsl:with-param name="path" select="concat($rel-path,'/',@path)"/>
       </xsl:call-template>
     </xsl:if>
   </xsl:variable>
@@ -463,13 +421,13 @@
   <xsl:variable name="value">
     <xsl:choose>
       <xsl:when test="$rel-value > 0">
-	<xsl:value-of select="$rel-value"/>
+        <xsl:value-of select="$rel-value"/>
       </xsl:when>
 
       <xsl:otherwise>
-	<xsl:call-template name="count-path">
-	  <xsl:with-param name="path" select="@path"/>
-	</xsl:call-template>
+        <xsl:call-template name="count-path">
+          <xsl:with-param name="path" select="@path"/>
+        </xsl:call-template>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:variable>
@@ -503,13 +461,13 @@
 
       <!-- Now we look up this constant value -->
       <xsl:choose>
-	<xsl:when test="/xylophone/constants/constant[@id=current()/@id][1]">
-	  <xsl:value-of select="/xylophone/constants/constant[@id=current()/@id][1]"/>
-	</xsl:when>
+        <xsl:when test="/xylophone/constants/constant[@id=current()/@id][1]">
+          <xsl:value-of select="/xylophone/constants/constant[@id=current()/@id][1]"/>
+        </xsl:when>
 
-	<xsl:otherwise>
-	  <xsl:message>Unknown id &quot;<xsl:value-of select="@id"/>&quot; in constant element.</xsl:message>
-	</xsl:otherwise>
+        <xsl:otherwise>
+          <xsl:message>Unknown id &quot;<xsl:value-of select="@id"/>&quot; in constant element.</xsl:message>
+        </xsl:otherwise>
       </xsl:choose>
 
     </xsl:when>
@@ -547,7 +505,7 @@
   <xsl:choose>
     <xsl:when test="/xylophone/mapping/map[@name=current()/@name]">
       <xsl:apply-templates select="/xylophone/mapping/map[@name=current()/@name][1]/*[1]" mode="eval-mapping">
-	<xsl:with-param name="before" select="$before"/>
+        <xsl:with-param name="before" select="$before"/>
       </xsl:apply-templates>
     </xsl:when>
 

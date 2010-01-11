@@ -1,0 +1,14 @@
+<xylophone>
+  <publish>
+    <object hidden="1" rdn="o">
+
+      <attr name="o">ACME</attr>
+
+      <object rdn="name"
+	      select="/test-element/animals/fish/fish">
+	<attr name="name"><lookup path="name"/></attr>
+	<attr name="type"><lookup path="../@type-id"/></attr>
+      </object>
+    </object>
+  </publish>
+</xylophone>

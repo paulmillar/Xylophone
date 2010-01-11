@@ -1,0 +1,14 @@
+<xylophone>
+  <publish>
+    <object hidden="1" rdn="o">
+
+      <attr name="o">ACME</attr>
+
+      <object rdn="name"
+	      select="/test-element/animals/fish/fish">
+	<attr name="name"><lookup path="name"/></attr>
+	<attr name="owner"><lookup path="/test-element/owners/owner[@id=current()/owner-id]/name"/></attr>
+      </object>
+    </object>
+  </publish>
+</xylophone>

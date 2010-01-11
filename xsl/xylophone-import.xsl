@@ -3,15 +3,15 @@
 <!--+
     | Copyright (c) 2008, Deutsches Elektronen-Synchrotron (DESY)
     | All rights reserved.
-    | 
+    |
     | Redistribution and use in source and binary forms, with
     | or without modification, are permitted provided that the
     | following conditions are met:
-    | 
+    |
     |   o  Redistributions of source code must retain the above
     |      copyright notice, this list of conditions and the
     |      following disclaimer.
-    | 
+    |
     |   o  Redistributions in binary form must reproduce the
     |      above copyright notice, this list of conditions and
     |      the following disclaimer in the documentation and/or
@@ -46,18 +46,20 @@
 <xsl:stylesheet version="1.0"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:dyn="http://exslt.org/dynamic"
-		xmlns:saxon655="http://icl.com/saxon"
-		xmlns:saxon9="http://saxon.sf.net/"
+                xmlns:saxon655="http://icl.com/saxon"
+                xmlns:saxon9="http://saxon.sf.net/"
                 extension-element-prefixes="dyn saxon9 saxon655">
 
+
 <!--+
-    |  Lookup a value with given path from $xml-src-uri.  If the result would
-    |  be empty then return default value.  If default isn't specified then
-    |  nothing is emitted.
+    |  Evaluate a lookup element.  The path to the current path is used to set the context
+    |  for the lookup.  This allows relative XPaths to be processed correctly.
     +-->
 <xsl:template name="eval-path">
-  <xsl:param name="path"/>
-  <xsl:param name="default"/>
+  <!-- $current-path must be absolute -->
+  <xsl:param name="current-path" select="'/'"/>
+  <xsl:param name="lookup-path" select="'.'"/>
+  <xsl:param name="default-value"/>
 
   <!-- We allow the XML src to be overwritten with the xml-src attribute -->
   <xsl:variable name="src">
@@ -71,34 +73,80 @@
     </xsl:choose>
   </xsl:variable>
 
-  <xsl:variable name="full-path" select="concat(&quot;document('&quot;,$src,&quot;')/&quot;,$path)"/>
+  <xsl:variable name="full-context-path">
+    <xsl:choose>
+      <xsl:when test="$current-path = '/'">
+        <xsl:value-of select="concat(&quot;document('&quot;,$src,&quot;')&quot;)"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="concat(&quot;document('&quot;,$src,&quot;')&quot;,$current-path)"/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:variable>
 
-  <!-- Check whether the path points to something valid -->
+  <!-- Emit the expansion from the given XPath -->
+  <xsl:choose>
+    <!-- Try with EXSLT (xsltproc, xalan) -->
+    <xsl:when test="function-available('dyn:evaluate')">
+      <xsl:apply-templates select="dyn:evaluate($full-context-path)" mode="eval-path">
+        <xsl:with-param name="lookup-path" select="$lookup-path"/>
+        <xsl:with-param name="default-value" select="$default-value"/>
+      </xsl:apply-templates>
+    </xsl:when>
+
+    <!-- Try with Saxon 6.5.5 -->
+    <xsl:when test="function-available('saxon655:evaluate')">
+      <xsl:apply-templates select="saxon655:evaluate($full-context-path)" mode="eval-path">
+        <xsl:with-param name="lookup-path" select="$lookup-path"/>
+        <xsl:with-param name="default-value" select="$default-value"/>
+      </xsl:apply-templates>
+    </xsl:when>
+
+    <!-- Try with Saxon v9 -->
+    <xsl:when test="function-available('saxon9:evaluate')">
+      <xsl:apply-templates select="saxon9:evaluate($full-context-path)" mode="eval-path">
+        <xsl:with-param name="lookup-path" select="$lookup-path"/>
+        <xsl:with-param name="default-value" select="$default-value"/>
+      </xsl:apply-templates>
+    </xsl:when>
+
+    <xsl:otherwise>
+      <!-- We've already flagged this problem, just emit nothing -->
+    </xsl:otherwise>
+  </xsl:choose>
+</xsl:template>
+
+
+
+<!-- Now we have the right context, expand the lookup-path -->
+<xsl:template match="/|node()|@*" mode="eval-path">
+  <xsl:param name="lookup-path" select="'.'"/>
+  <xsl:param name="default-value"/>
+
+  <!-- Does the lookup path exist? -->
   <xsl:variable name="valid-path">
     <xsl:choose>
 
       <!-- Try with EXSLT (xsltproc, xalan) -->
       <xsl:when test="function-available('dyn:evaluate')">
-	<xsl:value-of select="boolean(dyn:evaluate($full-path))"/>
+        <xsl:value-of select="boolean(dyn:evaluate($lookup-path))"/>
       </xsl:when>
 
       <!-- Try with Saxon 6.5.5 -->
       <xsl:when test="function-available('saxon655:evaluate')">
-	<xsl:value-of select="boolean(saxon655:evaluate($full-path))"/>
+        <xsl:value-of select="boolean(saxon655:evaluate($lookup-path))"/>
       </xsl:when>
 
       <!-- Try with Saxon v9 -->
       <xsl:when test="function-available('saxon9:evaluate')">
-	<xsl:value-of select="boolean(saxon9:evaluate($full-path))"/>
+        <xsl:value-of select="boolean(saxon9:evaluate($lookup-path))"/>
       </xsl:when>
 
-      <!-- Flag this as a problem -->
       <xsl:otherwise>
-	<xsl:message>You are using an XSLT processor without evaluate() support.</xsl:message>
+        <!-- We've already flagged this as a problem -->
       </xsl:otherwise>
     </xsl:choose>
   </xsl:variable>
-
 
   <!-- Emit the output -->
   <xsl:choose>
@@ -106,32 +154,35 @@
 
       <!-- Emit the expansion from the given XPath -->
       <xsl:choose>
-	<!-- Try with EXSLT (xsltproc, xalan) -->
-	<xsl:when test="function-available('dyn:evaluate')">
-	  <xsl:value-of select="dyn:evaluate($full-path)"/>
-	</xsl:when>
+        <!-- Try with EXSLT (xsltproc, xalan) -->
+        <xsl:when test="function-available('dyn:evaluate')">
+          <xsl:value-of select="dyn:evaluate($lookup-path)"/>
+        </xsl:when>
 
-	<!-- Try with Saxon 6.5.5 -->
-	<xsl:when test="function-available('saxon655:evaluate')">
-	  <xsl:value-of select="saxon655:evaluate($full-path)"/>
-	</xsl:when>
+        <!-- Try with Saxon 6.5.5 -->
+        <xsl:when test="function-available('saxon655:evaluate')">
+          <xsl:value-of select="saxon655:evaluate($lookup-path)"/>
+        </xsl:when>
 
-	<!-- Try with Saxon v9 -->
-	<xsl:when test="function-available('saxon9:evaluate')">
-	  <xsl:value-of select="saxon9:evaluate($full-path)"/>
-	</xsl:when>
+        <!-- Try with Saxon v9 -->
+        <xsl:when test="function-available('saxon9:evaluate')">
+          <xsl:value-of select="saxon9:evaluate($lookup-path)"/>
+        </xsl:when>
 
-	<xsl:otherwise>
-	  <!-- We've already flagged this problem, just emit nothing -->
-	</xsl:otherwise>
+        <xsl:otherwise>
+          <!-- We've already flagged this problem, just emit nothing -->
+        </xsl:otherwise>
       </xsl:choose>
     </xsl:when>
 
     <xsl:otherwise>
-      <xsl:value-of select="$default"/>
+      <xsl:value-of select="$default-value"/>
     </xsl:otherwise>
   </xsl:choose>
 </xsl:template>
+
+
+
 
 
 <!--+
@@ -150,10 +201,10 @@
   <xsl:variable name="src">
    <xsl:choose>
       <xsl:when test="@xml-src">
-	<xsl:value-of select="/xylophone/locations/location[@name=current()/@xml-src]"/>
+        <xsl:value-of select="/xylophone/locations/location[@name=current()/@xml-src]"/>
       </xsl:when>
       <xsl:otherwise>
-	<xsl:value-of select="$xml-src-uri"/>
+        <xsl:value-of select="$xml-src-uri"/>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:variable>
@@ -173,7 +224,7 @@
     <xsl:when test="function-available('saxon655:evaluate')">
       <xsl:value-of select="count(saxon655:evaluate($full-path))"/>
     </xsl:when>
-    
+
     <!-- Support for Saxon v9 -->
     <xsl:when test="function-available('saxon9:evaluate')">
       <xsl:value-of select="count(saxon9:evaluate($full-path))"/>
@@ -207,10 +258,10 @@
   <xsl:variable name="src">
     <xsl:choose>
       <xsl:when test="@xml-src">
-	<xsl:value-of select="/xylophone/locations/location[@name=current()/@xml-src]"/>
+        <xsl:value-of select="/xylophone/locations/location[@name=current()/@xml-src]"/>
       </xsl:when>
       <xsl:otherwise>
-	<xsl:value-of select="$xml-src-uri"/>
+        <xsl:value-of select="$xml-src-uri"/>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:variable>
@@ -231,7 +282,7 @@
     <xsl:when test="function-available('saxon655:evaluate')">
       <xsl:value-of select="sum(saxon655:evaluate($full-path))"/>
     </xsl:when>
-    
+
     <!-- Support for Saxon v9 -->
     <xsl:when test="function-available('saxon9:evaluate')">
       <xsl:value-of select="sum(saxon9:evaluate($full-path))"/>

@@ -1,0 +1,7 @@
+dn: name=Fred,o=ACME
+name: Fred
+owner: Alice Smith
+
+dn: name=Andrew,o=ACME
+name: Andrew
+owner: Katherine Andrews

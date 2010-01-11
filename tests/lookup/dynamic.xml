@@ -9,33 +9,53 @@
   </first>
 
   <animals>
-    <birds>
+    <birds type-id="1">
       <bird type="Norwegian-blue">
 	<name>Polly parrot</name>
+	<owner-id>3</owner-id>
       </bird>
     </birds>
-    <fish>
+    <fish type-id="2">
       <fish type="goldfish">
 	<name>Fred</name>
+	<owner-id>1</owner-id>
       </fish>
       <fish type="carp">
 	<name>Andrew</name>
+	<owner-id>2</owner-id>
       </fish>
     </fish>
-    <mammals>
+    <mammals type-id="3">
       <mammal type="cat">
 	<name>Tigger</name>
+	<owner-id>3</owner-id>
       </mammal>
       <mammal type="dog">
 	<name>Rover</name>
+	<owner-id>2</owner-id>
       </mammal>
     </mammals>
-    <reptiles>
+    <reptiles type-id="4">
       <mammal type="snake">
 	<name>Odysseus</name>
+	<owner-id>1</owner-id>
       </mammal>
     </reptiles>
   </animals>
+
+  <owners>
+    <owner id="1">
+      <name>Alice Smith</name>
+    </owner>
+
+    <owner id="2">
+      <name>Katherine Andrews</name>
+    </owner>
+
+    <owner id="3">
+      <name>Sara Williams</name>
+    </owner>
+  </owners>
 
   <second>
     <items>

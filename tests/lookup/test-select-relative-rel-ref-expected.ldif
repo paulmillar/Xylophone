@@ -1,0 +1,7 @@
+dn: name=Fred,o=ACME
+name: Fred
+type: 2
+
+dn: name=Andrew,o=ACME
+name: Andrew
+type: 2
