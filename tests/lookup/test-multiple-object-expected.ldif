@@ -1,0 +1,7 @@
+dn: name=Tigger,o=ACME
+name: Tigger
+type: cat
+
+dn: name=Rover,o=ACME
+name: Rover
+type: dog

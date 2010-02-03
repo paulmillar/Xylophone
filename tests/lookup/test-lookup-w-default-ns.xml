@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+
+<!DOCTYPE xylophone [
+<!ENTITY % entities SYSTEM "../test-entities.xml" >
+%entities;
+]>
+
+
+<!--+
+    |  Check that default is used when a path lookup fails
+    +-->
+
+<xylophone>
+  <locations>
+    <location name="external-file">&abs-test-path;/lookup/dynamic-w-default-ns.xml</location>
+  </locations>
+
+  <publish>
+    <object hidden="1" rdn="type">
+      <attr name="type">Books</attr>
+
+      <object hidden="1" rdn="collection">
+	<attr name="collection">
+	  <lookup xml-src="external-file"
+		  path="/example:test/example:collection"/>
+	</attr>
+
+	<object rdn="Title"
+		xml-src="external-file"
+		select="/example:test/example:books/example:book">
+          <comment>Taken from <xpath of='dynamic'/></comment>
+
+	  <attr name="Title"><lookup xml-src="external-file"
+	  path="example:title"/></attr>
+
+	  <attr not-empty="1"
+		name="Author"><lookup xml-src="external-file"
+		path="example:author"/></attr>
+
+	  <attr name="Publisher"><lookup xml-src="external-file"
+	  path="example:publisher"/></attr>
+	  <attr not-empty='1'
+		name="TranslatedBy"><lookup xml-src="external-file"
+		path="example:translated-by"/></attr>
+	</object>
+      </object>
+    </object>
+  </publish>
+</xylophone>

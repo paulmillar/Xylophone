@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+
+<xylophone>
+  <publish>
+    <object hidden="1" rdn="o">
+      <attr name="o">ACME</attr>
+
+      <object rdn="name"
+	      select="/test-element/animals/mammals/*">
+
+	<attr name="name"><lookup path="name"/></attr>
+	<attr name="type"><lookup path="@type"/></attr>
+      </object>
+    </object>
+  </publish>
+</xylophone>

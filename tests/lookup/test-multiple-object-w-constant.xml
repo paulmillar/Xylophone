@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+
+<xylophone>
+  <constants>
+    <constant id="ref-id">REF00112233</constant>
+  </constants>
+
+  <publish>
+    <object hidden="1" rdn="o">
+      <attr name="o">ACME</attr>
+
+      <object rdn="name"
+	      select="/test-element/animals/mammals/*">
+
+	<attr name="name"><lookup path="name"/></attr>
+	<attr name="type"><lookup path="@type"/></attr>
+	<attr name="ref-id"><constant id="ref-id"/></attr>
+      </object>
+    </object>
+  </publish>
+</xylophone>

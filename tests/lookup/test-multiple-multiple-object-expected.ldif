@@ -1,0 +1,39 @@
+dn: classificationId=1,o=ACME
+classificationName: birds
+classificationId: 1
+
+dn: animalName=Polly parrot,classificationId=1,o=ACME
+animalName: Polly parrot
+animalType: Norwegian-blue
+
+dn: classificationId=2,o=ACME
+classificationName: fish
+classificationId: 2
+
+dn: animalName=Fred,classificationId=2,o=ACME
+animalName: Fred
+animalType: goldfish
+
+dn: animalName=Andrew,classificationId=2,o=ACME
+animalName: Andrew
+animalType: carp
+
+dn: classificationId=3,o=ACME
+classificationName: mammals
+classificationId: 3
+
+dn: animalName=Tigger,classificationId=3,o=ACME
+animalName: Tigger
+animalType: cat
+
+dn: animalName=Rover,classificationId=3,o=ACME
+animalName: Rover
+animalType: dog
+
+dn: classificationId=4,o=ACME
+classificationName: reptiles
+classificationId: 4
+
+dn: animalName=Odysseus,classificationId=4,o=ACME
+animalName: Odysseus
+animalType: snake

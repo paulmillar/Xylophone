@@ -1,0 +1,38 @@
+<example:test xmlns:example="http://example.org/SCHEMA/2010/01">
+  <example:collection>My bookshelf</example:collection>
+
+  <example:books>
+    <example:book>
+      <example:title>The Hitchhikers Guide to the Universe</example:title>
+      <example:author>Douglas Adams</example:author>
+      <example:pages>159</example:pages>
+      <example:publisher>Pan Books Ltd</example:publisher>
+    </example:book>
+
+    <example:book>
+      <example:title>The Pickwick Papers</example:title>
+      <example:author>Charles Dickens</example:author>
+      <example:publisher>Oxford Univerity Press</example:publisher>
+    </example:book>
+
+    <example:book>
+      <example:title>The Iliad</example:title>
+      <example:author>Homer</example:author>
+      <example:translated-by>Robert Fitzgerald</example:translated-by>
+      <example:pages>443</example:pages>
+      <example:publisher>Oxford University Press</example:publisher>
+    </example:book>
+
+    <example:book>
+      <example:title>Beuwulf</example:title>
+      <example:translated-by>Seamus Heaney</example:translated-by>
+      <example:publisher>Faber and Faber Limited</example:publisher>
+    </example:book>
+
+    <example:book>
+      <example:title>The Last Continent</example:title>
+      <example:author>Terry Pratchett</example:author>
+      <example:publisher>Transworld Publishers</example:publisher>
+    </example:book>
+  </example:books>
+</example:test>

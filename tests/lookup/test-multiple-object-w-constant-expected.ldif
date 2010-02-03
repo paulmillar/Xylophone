@@ -1,0 +1,9 @@
+dn: name=Tigger,o=ACME
+name: Tigger
+type: cat
+ref-id: REF00112233
+
+dn: name=Rover,o=ACME
+name: Rover
+type: dog
+ref-id: REF00112233
