@@ -36,10 +36,10 @@
       </mammal>
     </mammals>
     <reptiles type-id="4">
-      <mammal type="snake">
+      <reptile type="snake">
 	<name>Odysseus</name>
 	<owner-id>1</owner-id>
-      </mammal>
+      </reptile>
     </reptiles>
   </animals>
 
