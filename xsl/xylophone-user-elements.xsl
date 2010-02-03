@@ -113,30 +113,31 @@
     </xsl:call-template>
   </xsl:variable>
 
-
-  <!-- Figure out what our default should be -->
+  <!-- Figure out what our default value should be -->
   <xsl:variable name="default-value">
     <xsl:choose>
-      <xsl:when test="count(@default) &gt; 0">
+      <xsl:when test="@default">
         <xsl:value-of select="@default"/>
       </xsl:when>
 
       <xsl:when test="not(@child) or @child='default'">
         <xsl:apply-templates mode="eval-attr">
-          <xsl:with-param name="rel-path" select="$current-path"/>
+	  <xsl:with-param name="path-stack" select="$path-stack"/>
+	  <xsl:with-param name="depth" select="$depth"/>
           <xsl:with-param name="list-item" select="$list-item"/>
         </xsl:apply-templates>
       </xsl:when>
 
       <xsl:when test="@child='path'">
-        <!-- Our default is empty... -->
+        <!-- User has supplied child='path' and no default attribute.  The default is then empty. -->
       </xsl:when>
 
       <xsl:otherwise>
-        <xsl:message>Unknown "child" attribute value &quot;<xsl:value-of select="@child"/>&quot; in lookup element.</xsl:message>
+        <xsl:message>WARNING: unknown "child" attribute value &quot;<xsl:value-of select="@child"/>&quot; in <xsl:value-of select="build-XPath"/></xsl:message>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:variable>
+
 
   <xsl:variable name="lookup-path">
     <xsl:choose>
@@ -151,7 +152,7 @@
       </xsl:when>
 
       <xsl:otherwise>
-        <xsl:message>Missing path in lookup element</xsl:message>
+        <xsl:message>ERROR: path missing in <xsl:value-of select="build-XPath"/></xsl:message>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:variable>
@@ -162,13 +163,14 @@
 
       <!-- Check we actually have a decent path defn. -->
       <xsl:when test="not(normalize-space($lookup-path))">
-        <xsl:message>Empty path found for lookup element, using default.</xsl:message>
+        <xsl:message>ERROR: empty path found for lookup element, falling back to the default value.</xsl:message>
         <xsl:value-of select="$default-value"/>
       </xsl:when>
 
       <xsl:otherwise>
         <xsl:call-template name="eval-path">
-          <xsl:with-param name="current-path" select="$current-path"/>
+	  <xsl:with-param name="path-stack" select="$path-stack"/>
+	  <xsl:with-param name="depth" select="$depth"/>
           <xsl:with-param name="lookup-path" select="$lookup-path"/>
           <xsl:with-param name="default-value" select="$default-value"/>
         </xsl:call-template>
@@ -337,14 +339,9 @@
   <xsl:choose>
     <xsl:when test="@path">
       <xsl:call-template name="sum-path">
-        <xsl:with-param name="rel-path">
-          <xsl:call-template name="path-stack-find-path">
-            <xsl:with-param name="path-stack" select="$path-stack"/>
-            <xsl:with-param name="depth" select="$depth"/>
-          </xsl:call-template>
-        </xsl:with-param>
+	<xsl:with-param name="path-stack" select="$path-stack"/>
+	<xsl:with-param name="depth" select="$depth"/>
       </xsl:call-template>
-
     </xsl:when>
 
     <xsl:otherwise>
@@ -384,66 +381,6 @@
   <term>
     <xsl:value-of select="number($result)"/>
   </term>
-</xsl:template>
-
-
-<!--+
-    |   The <count/> element
-    |
-    |  Mostly available for testing, this counts the number of
-    |  elements that match a certain path.
-    |
-    +-->
-<xsl:template match="count" mode="eval-attr">
-  <xsl:param name="depth"/>
-  <xsl:param name="path-stack"/>
-  <xsl:param name="list-item"/>
-
-    <!-- Extract our rel-path -->
-  <xsl:variable name="rel-path">
-    <xsl:call-template name="path-stack-find-path">
-      <xsl:with-param name="path-stack" select="$path-stack"/>
-      <xsl:with-param name="depth" select="$depth"/>
-    </xsl:call-template>
-  </xsl:variable>
-
-
-  <!-- First try with rel-path prefix -->
-  <xsl:variable name="rel-value">
-    <xsl:if test="normalize-space($rel-path)">
-      <xsl:call-template name="count-path">
-        <xsl:with-param name="path" select="concat($rel-path,'/',@path)"/>
-      </xsl:call-template>
-    </xsl:if>
-  </xsl:variable>
-
-  <!-- Build our result based on rel-value or absolute path -->
-  <xsl:variable name="value">
-    <xsl:choose>
-      <xsl:when test="$rel-value > 0">
-        <xsl:value-of select="$rel-value"/>
-      </xsl:when>
-
-      <xsl:otherwise>
-        <xsl:call-template name="count-path">
-          <xsl:with-param name="path" select="@path"/>
-        </xsl:call-template>
-      </xsl:otherwise>
-    </xsl:choose>
-  </xsl:variable>
-
-
-  <xsl:choose>
-    <xsl:when test="normalize-space( $value)">
-      <xsl:value-of select="$value"/>
-    </xsl:when>
-
-    <xsl:otherwise>
-      <xsl:message>Count path <xsl:value-of select="@path"/> is invalid.</xsl:message>
-      <xsl:text>0</xsl:text>
-    </xsl:otherwise>
-  </xsl:choose>
-
 </xsl:template>
 
 
@@ -528,6 +465,35 @@
   <xsl:param name="list-item"/>
 
   <xsl:value-of select="$list-item"/>
+</xsl:template>
+
+
+
+<!--+
+    |  The <xpath/> element
+    |
+    |  This expands to the XPath of the current element.
+    +-->
+<xsl:template match="xpath" mode="eval-attr">
+  <xsl:param name="depth"/>
+  <xsl:param name="path-stack"/>
+
+  <xsl:choose>
+    <xsl:when test="not(@of) or @of = 'dynamic'">
+      <xsl:call-template name="path-stack-find-path">
+	<xsl:with-param name="path-stack" select="$path-stack"/>
+	<xsl:with-param name="depth" select="$depth"/>
+      </xsl:call-template>
+    </xsl:when>
+
+    <xsl:when test="@of = 'xylophone'">
+      <xsl:call-template name="build-XPath"/>
+    </xsl:when>
+
+    <xsl:otherwise>
+      <xsl:message>Unknown value of 'of' attribute, should be either 'xylophone' or 'dynamic'</xsl:message>
+    </xsl:otherwise>
+  </xsl:choose>
 </xsl:template>
 
 
