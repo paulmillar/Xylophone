@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!DOCTYPE xylophone [
+<!ENTITY % entities SYSTEM "../test-entities.xml" >
+%entities;
+]>
+
+<!--+
+    |  Check sum path works as expected
+    +-->
+
+<xylophone>
+  <locations>
+    <location name="external-file">&abs-test-path;/sum/dynamic-2.xml</location>
+  </locations>
+
+  <publish>
+    <object rdn="o" classes="sums">
+      <attr name="o">test</attr>
+    </object>
+  </publish>
+
+  <classes>
+    <class name="sums">
+      <attr name="sum"><sum xml-src="external-file"
+			    path="/items/item"/></attr>
+    </class>
+  </classes>
+</xylophone>

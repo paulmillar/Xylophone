@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--+
+    |  Check sum path works as expected
+    +-->
+
+<xylophone>
+  <publish>
+    <object rdn="o" classes="sums">
+      <attr name="o">test</attr>
+    </object>
+  </publish>
+
+  <classes>
+    <class name="sums">
+      <attr name="sum"><sum path="/items/item"/></attr>
+    </class>
+  </classes>
+</xylophone>

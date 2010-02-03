@@ -1,0 +1,4 @@
+dn: o=test
+objectClass: sums
+sum: 3
+o: test

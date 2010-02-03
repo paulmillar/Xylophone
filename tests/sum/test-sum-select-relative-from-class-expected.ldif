@@ -1,0 +1,14 @@
+dn: object=first,o=ACME
+objectClass: sums
+sum: 10
+object: first
+
+dn: object=second,o=ACME
+objectClass: sums
+sum: 15
+object: second
+
+dn: object=third,o=ACME
+objectClass: sums
+sum: 23
+object: third

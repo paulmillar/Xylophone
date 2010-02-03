@@ -1,0 +1,11 @@
+dn: object=first,o=ACME
+object: first
+sum: 10
+
+dn: object=second,o=ACME
+object: second
+sum: 15
+
+dn: object=third,o=ACME
+object: third
+sum: 23
