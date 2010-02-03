@@ -1,0 +1,32 @@
+
+<xylophone>
+  <publish>
+    <object hidden="1" rdn="o">
+      <attr name="o">ACME</attr>
+
+      <object rdn="id"
+	      select="/batch-system/job-batches/job-batch"
+	      classes="job-batch">
+	<attr name="id">
+	  <lookup path="@id"/>
+	</attr>
+
+	<attr name="name">
+	  <lookup path="name"/>
+	</attr>
+
+	<attr name="priority">
+	  <lookup path="priority"/>
+	</attr>
+      </object>
+    </object>
+  </publish>
+
+  <classes>
+    <class name="job-batch">
+      <attr name="batch-start">
+        <lookup path="/batch-system/summary/start-date"/>
+      </attr>
+    </class>
+  </classes>
+</xylophone>

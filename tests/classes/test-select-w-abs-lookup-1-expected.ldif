@@ -1,0 +1,20 @@
+dn: id=req-322,o=ACME
+objectClass: job-batch
+id: req-322
+name: Alice's jobs
+priority: normal
+batch-start: 2009-04-20T11:12Z
+
+dn: id=req-323,o=ACME
+objectClass: job-batch
+id: req-323
+name: Bob's jobs
+priority: normal
+batch-start: 2009-04-20T11:12Z
+
+dn: id=req-324,o=ACME
+objectClass: job-batch
+id: req-324
+name: Katherine's jobs
+priority: high
+batch-start: 2009-04-20T11:12Z

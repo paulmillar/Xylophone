@@ -1,0 +1,4 @@
+dn: ou=R&D,o=ACME
+objectClass: simple-1
+objectClass: simple-2
+ou: R&D

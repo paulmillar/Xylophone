@@ -1,0 +1,17 @@
+
+<xylophone>
+  <publish>
+    <object hidden="1" rdn="o">
+      <attr name="o">ACME</attr>
+
+      <object rdn="ou" classes="simple">
+	<attr name="ou">R&amp;D</attr>
+      </object>
+
+    </object>
+
+    <classes>
+      <class name="simple"/>
+    </classes>
+  </publish>
+</xylophone>

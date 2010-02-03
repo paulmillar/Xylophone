@@ -1,0 +1,12 @@
+
+<xylophone>
+  <publish>
+    <object rdn="o" classes="simple">
+      <attr name="o">test-organisation</attr>
+    </object>
+
+    <classes>
+      <class name="simple"/>
+    </classes>
+  </publish>
+</xylophone>

@@ -1,0 +1,3 @@
+dn: ou=R&D,o=ACME
+objectClass: simple
+ou: R&D
