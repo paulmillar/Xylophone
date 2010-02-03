@@ -1,4 +1,22 @@
 <items>
   <item>1</item>
   <item>2</item>
+
+  <object name="first">
+    <item>2</item>
+    <item>3</item>
+    <item>5</item>
+  </object>
+
+  <object name="second">
+    <item>3</item>
+    <item>5</item>
+    <item>7</item>
+  </object>
+
+  <object name="third">
+    <item>5</item>
+    <item>7</item>
+    <item>11</item>
+  </object>
 </items>
