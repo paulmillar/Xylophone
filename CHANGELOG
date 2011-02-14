@@ -1,3 +1,6 @@
+2011-02-14 Paul Millar <paul.millar@desy.de>
+  Add support for discovering the value of an RDN via parent-rdn; add mandatory attr 'use'
+
 2010-01-11 Paul Millar <paul.millar@desy.de>
   Add support for relative paths in lookup element
 

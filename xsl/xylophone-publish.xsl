@@ -774,8 +774,9 @@
 <xsl:template match="object" mode="emit-RDN-for-attribute">
   <xsl:param name="path-stack"/>
   <xsl:param name="list-item"/>
+  <xsl:param name="prefix"/>
 
-  <xsl:value-of select="concat(@rdn,'=')"/>
+  <xsl:value-of select="$prefix"/>
 
   <xsl:call-template name="markup-attribute-value">
     <xsl:with-param name="value">

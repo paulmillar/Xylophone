@@ -11,7 +11,7 @@
 
       <object rdn="ou">
 	<attr name="ou">Department X</attr>
-	<attr name="ref"><parent-rdn rdn="o"/></attr>
+	<attr name="ref"><parent-rdn use='rdn' rdn="o"/></attr>
       </object>
     </object>
   </publish>

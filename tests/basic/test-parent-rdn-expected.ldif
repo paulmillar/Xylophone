@@ -1,0 +1,21 @@
+dn: o=test-organisation
+o: test-organisation
+
+dn: TestType=parent-rdn,o=test-organisation
+TestType: parent-rdn
+
+dn: test=test-1,TestType=parent-rdn,o=test-organisation
+test: test-1
+parent-rdn: o=test-organisation
+
+dn: test=test-2,TestType=parent-rdn,o=test-organisation
+test: test-2
+parent-rdn: test-organisation
+
+dn: test=test-3,TestType=parent-rdn,o=test-organisation
+test: test-3
+parent-rdn: TestType=parent-rdn
+
+dn: test=test-4,TestType=parent-rdn,o=test-organisation
+test: test-4
+parent-rdn: parent-rdn
