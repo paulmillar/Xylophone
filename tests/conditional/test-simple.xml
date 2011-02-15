@@ -1,0 +1,46 @@
+
+
+<xylophone>
+
+  <publish>
+    <object rdn="o" hidden="1">
+      <attr name="o">test organisation</attr>
+
+      <object rdn="TestID">
+	<attr name="TestID">1</attr>
+
+	<optionally>
+	  <when test="foo">bar</when>
+	  <attr name="HasFoo">true</attr>
+	</optionally>
+      </object>
+
+
+
+      <object rdn="TestID">
+	<attr name="TestID">2</attr>
+
+	<optionally>
+	  <when test="foo">foo</when>
+	  <attr name="HasFoo">true</attr>
+	</optionally>
+      </object>
+
+
+
+      <object rdn="TestID">
+	<attr name="TestID">3</attr>
+
+	<optionally>
+	  <when test="foo">foo</when>
+
+	  <object rdn="FooID">
+	    <attr name="FooID">42</attr>
+	  </object>
+	</optionally>
+      </object>
+
+    </object>
+  </publish>
+
+</xylophone>

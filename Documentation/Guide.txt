@@ -1546,3 +1546,161 @@ This produces the following output:
   dn: Name=Bill,group=birds
   Name: Bill
   Type: Budgerigar
+
+
+
+
+
+Conditional publishing
+
+
+The suppress and allow elements, which apply to objects and
+attributes, provide a basic mechanism to pick particular objects or
+attributes that should be published.
+
+Sometimes one wishes to group together a set of zero or more
+attributes and zero or more child objects and either jointly publish
+them or not.
+
+To support this mode of variable publishing, there is an if-then
+pattern and a multiple-choice pattern for selectively publishing
+attributes and child objects.
+
+The if-then publishing uses optionally element with a when child
+element; in the following example, additional information is published
+about the mammals.
+
+  <xylophone>
+    <publish>
+      <object rdn="GroupName" list="groups">
+        <attr name="GroupName"><item/></attr>
+
+        <optionally>
+          <when test="mammals"><item/></when>
+
+          <attr name="MammalAttribute">some-value</attr>
+
+          <object rdn="MammalName" list="mammals">
+	    <attr name="MammalName"><item/></attr>
+          </object>
+        </optionally>
+      </object>
+    </publish>
+
+    <lists>
+      <list name="groups">
+        <item>birds</item>
+        <item>mammals</item>
+      </list>
+
+      <list name="mammals">
+        <item>cats</item>
+        <item>dogs</item>
+      </list>
+    </lists>
+  </xylophone>
+
+This produces the following output:
+
+  dn: GroupName=birds
+  GroupName: birds
+
+  dn: GroupName=mammals
+  GroupName: mammals
+  MammalAttribute: some-value
+
+  dn: MammalName=cats,GroupName=mammals
+  MammalName: cats
+
+  dn: MammalName=dogs,GroupName=mammals
+  MammalName: dogs
+
+The multiple-choice pattern allows to publish at most one of a
+selection of available options.  The choose element surrounds one or
+more optionally elements and optionally an otherwise element.  The
+optionally elements behave as above, with a child while element that
+controls whether the optionally element's content is published.  The
+first optionally element with a matching when element is published.
+If no optionally element has a matching when element then the
+otherwise element is published, if present.
+
+The following example demonstrates this.
+
+  <xylophone>
+    <publish>
+      <object rdn="GroupName" list="groups">
+        <attr name="GroupName"><item/></attr>
+
+	<choose>
+          <optionally>
+            <when test="mammals"><item/></when>
+
+            <attr name="MammalAttribute">some-value</attr>
+
+            <object rdn="MammalName" list="mammals">
+	      <attr name="MammalName"><item/></attr>
+            </object>
+          </optionally>
+
+          <optionally>
+            <when test="birds"><item/></when>
+
+            <attr name="BirdAttribute">some-value</attr>
+
+            <object rdn="BirdName" list="birds">
+	      <attr name="BirdName"><item/></attr>
+            </object>
+          </optionally>
+
+	  <otherwise>
+            <attr name="OtherAttribute">some-value</attr>
+	  </otherwise>
+        </choose>
+
+      </object>
+    </publish>
+
+    <lists>
+      <list name="groups">
+        <item>birds</item>
+        <item>mammals</item>
+	<item>reptiles</item>
+      </list>
+
+      <list name="mammals">
+        <item>cats</item>
+        <item>dogs</item>
+      </list>
+
+      <list name="birds">
+        <item>albatross</item>
+        <item>duck</item>
+      </list>
+    </lists>
+  </xylophone>
+
+This produces the following output
+
+  dn: GroupName=birds
+  GroupName: birds
+  BirdAttribute: some-value
+
+  dn: BirdName=albatross,GroupName=birds
+  BirdName: albatross
+
+  dn: BirdName=duck,GroupName=birds
+  BirdName: duck
+
+  dn: GroupName=mammals
+  GroupName: mammals
+  MammalAttribute: some-value
+
+  dn: MammalName=cats,GroupName=mammals
+  MammalName: cats
+
+  dn: MammalName=dogs,GroupName=mammals
+  MammalName: dogs
+
+  dn: GroupName=reptiles
+  GroupName: reptiles
+  OtherAttribute: some-value

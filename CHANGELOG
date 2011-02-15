@@ -1,3 +1,6 @@
+2011-02-15 Paul Millar <paul.millar@desy.de>
+  Add support for conditional processing with choose, optionally and when elements
+
 2011-02-14 Paul Millar <paul.millar@desy.de>
   Add support for discovering the value of an RDN via parent-rdn; add mandatory attr 'use'
 

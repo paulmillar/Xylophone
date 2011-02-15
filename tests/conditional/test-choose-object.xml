@@ -1,0 +1,197 @@
+
+
+<xylophone>
+
+  <publish>
+    <object rdn="o" hidden="1">
+      <attr name="o">test organisation</attr>
+
+      <!-- Match first -->
+      <object rdn="TestID">
+	<attr name="TestID">1</attr>
+
+	<choose>
+	  <optionally>
+	    <when test="foo">foo</when>
+
+	    <object rdn="ChildID">
+	      <attr name="ChildID">1</attr>
+	    </object>
+	  </optionally>
+
+	  <optionally>
+	    <when test="bar">foo</when>
+
+	    <object rdn="ChildID">
+	      <attr name="ChildID">2</attr>
+	    </object>
+	  </optionally>
+
+	  <otherwise>
+	    <object rdn="ChildID">
+	      <attr name="ChildID">3</attr>
+	    </object>
+	  </otherwise>
+	</choose>
+      </object>
+
+
+      <!-- Match second -->
+      <object rdn="TestID">
+	<attr name="TestID">2</attr>
+
+	<choose>
+	  <optionally>
+	    <when test="foo">bar</when>
+
+	    <object rdn="ChildID">
+	      <attr name="ChildID">1</attr>
+	    </object>
+	  </optionally>
+
+	  <optionally>
+	    <when test="bar">bar</when>
+
+	    <object rdn="ChildID">
+	      <attr name="ChildID">2</attr>
+	    </object>
+	  </optionally>
+
+	  <otherwise>
+	    <object rdn="ChildID">
+	      <attr name="ChildID">3</attr>
+	    </object>
+	  </otherwise>
+	</choose>
+      </object>
+
+
+
+
+      <!-- Trigger <otherwise/> -->
+      <object rdn="TestID">
+	<attr name="TestID">3</attr>
+
+	<choose>
+	  <optionally>
+	    <when test="foo">baz</when>
+
+	    <object rdn="ChildID">
+	      <attr name="ChildID">1</attr>
+	    </object>
+	  </optionally>
+
+	  <optionally>
+	    <when test="bar">baz</when>
+
+	    <object rdn="ChildID">
+	      <attr name="ChildID">2</attr>
+	    </object>
+	  </optionally>
+
+	  <otherwise>
+	    <object rdn="ChildID">
+	      <attr name="ChildID">3</attr>
+	    </object>
+	  </otherwise>
+	</choose>
+      </object>
+
+
+
+      <!-- Both match -->
+      <object rdn="TestID">
+	<attr name="TestID">4</attr>
+
+	<choose>
+	  <optionally>
+	    <when test="foo">foo</when>
+
+	    <object rdn="ChildID">
+	      <attr name="ChildID">1</attr>
+	    </object>
+	  </optionally>
+
+	  <optionally>
+	    <when test="bar">bar</when>
+
+	    <object rdn="ChildID">
+	      <attr name="ChildID">2</attr>
+	    </object>
+	  </optionally>
+
+	  <otherwise>
+	    <object rdn="ChildID">
+	      <attr name="ChildID">3</attr>
+	    </object>
+	  </otherwise>
+	</choose>
+      </object>
+
+
+      <!-- None match -->
+      <object rdn="TestID">
+	<attr name="TestID">5</attr>
+
+	<choose>
+	  <optionally>
+	    <when test="foo">baz</when>
+
+	    <object rdn="ChildID">
+	      <attr name="ChildID">1</attr>
+	    </object>
+	  </optionally>
+
+	  <optionally>
+	    <when test="bar">baz</when>
+
+	    <object rdn="ChildID">
+	      <attr name="ChildID">2</attr>
+	    </object>
+	  </optionally>
+	</choose>
+      </object>
+
+
+
+      <!-- Iterate over a list -->
+      <object rdn="TestID" list="items">
+	<attr name="TestID">6-<item/></attr>
+
+	<choose>
+	  <optionally>
+	    <when test="cat"><item/></when>
+
+	    <object rdn="CatID">
+	      <attr name="CatID">1</attr>
+	    </object>
+	  </optionally>
+
+	  <optionally>
+	    <when test="dog"><item/></when>
+
+	    <object rdn="DogID">
+	      <attr name="DogID">1</attr>
+	    </object>
+	  </optionally>
+
+	  <otherwise>
+	    <object rdn="OtherID">
+	      <attr name="OtherID">1</attr>
+	    </object>
+	  </otherwise>
+	</choose>
+      </object>
+    </object>
+  </publish>
+
+
+  <lists>
+    <list name="items">
+      <item>cat</item>
+      <item>dog</item>
+      <item>fish</item>
+    </list>
+  </lists>
+
+</xylophone>

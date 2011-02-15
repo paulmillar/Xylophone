@@ -1,0 +1,30 @@
+dn: TestID=1,o=test organisation
+TestID: 1
+Matching: 1
+
+dn: TestID=2,o=test organisation
+TestID: 2
+Matching: 2
+
+dn: TestID=3,o=test organisation
+TestID: 3
+Matching: 3
+
+dn: TestID=4,o=test organisation
+TestID: 4
+Matching: 1
+
+dn: TestID=5,o=test organisation
+TestID: 5
+
+dn: TestID=6-cat,o=test organisation
+TestID: 6-cat
+ItemType: It's a cat!
+
+dn: TestID=6-dog,o=test organisation
+TestID: 6-dog
+ItemType: It's a dog!
+
+dn: TestID=6-fish,o=test organisation
+TestID: 6-fish
+ItemType: It's something else!

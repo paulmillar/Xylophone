@@ -1,0 +1,44 @@
+dn: TestID=1,o=test organisation
+TestID: 1
+
+dn: ChildID=1,TestID=1,o=test organisation
+ChildID: 1
+
+dn: TestID=2,o=test organisation
+TestID: 2
+
+dn: ChildID=2,TestID=2,o=test organisation
+ChildID: 2
+
+dn: TestID=3,o=test organisation
+TestID: 3
+
+dn: ChildID=3,TestID=3,o=test organisation
+ChildID: 3
+
+dn: TestID=4,o=test organisation
+TestID: 4
+
+dn: ChildID=1,TestID=4,o=test organisation
+ChildID: 1
+
+dn: TestID=5,o=test organisation
+TestID: 5
+
+dn: TestID=6-cat,o=test organisation
+TestID: 6-cat
+
+dn: CatID=1,TestID=6-cat,o=test organisation
+CatID: 1
+
+dn: TestID=6-dog,o=test organisation
+TestID: 6-dog
+
+dn: DogID=1,TestID=6-dog,o=test organisation
+DogID: 1
+
+dn: TestID=6-fish,o=test organisation
+TestID: 6-fish
+
+dn: OtherID=1,TestID=6-fish,o=test organisation
+OtherID: 1

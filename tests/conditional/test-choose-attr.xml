@@ -1,0 +1,151 @@
+
+
+<xylophone>
+
+  <publish>
+    <object rdn="o" hidden="1">
+      <attr name="o">test organisation</attr>
+
+      <!-- Match first -->
+      <object rdn="TestID">
+	<attr name="TestID">1</attr>
+
+	<choose>
+	  <optionally>
+	    <when test="foo">foo</when>
+	    <attr name="Matching">1</attr>
+	  </optionally>
+
+	  <optionally>
+	    <when test="bar">foo</when>
+	    <attr name="Matching">2</attr>
+	  </optionally>
+
+	  <otherwise>
+	    <attr name="Matching">3</attr>
+	  </otherwise>
+	</choose>
+      </object>
+
+
+      <!-- Match second -->
+      <object rdn="TestID">
+	<attr name="TestID">2</attr>
+
+	<choose>
+	  <optionally>
+	    <when test="foo">bar</when>
+	    <attr name="Matching">1</attr>
+	  </optionally>
+
+	  <optionally>
+	    <when test="bar">bar</when>
+	    <attr name="Matching">2</attr>
+	  </optionally>
+
+	  <otherwise>
+	    <attr name="Matching">3</attr>
+	  </otherwise>
+	</choose>
+      </object>
+
+
+
+
+      <!-- Trigger <otherwise/> -->
+      <object rdn="TestID">
+	<attr name="TestID">3</attr>
+
+	<choose>
+	  <optionally>
+	    <when test="foo">baz</when>
+	    <attr name="Matching">1</attr>
+	  </optionally>
+
+	  <optionally>
+	    <when test="bar">baz</when>
+	    <attr name="Matching">2</attr>
+	  </optionally>
+
+	  <otherwise>
+	    <attr name="Matching">3</attr>
+	  </otherwise>
+	</choose>
+      </object>
+
+
+
+      <!-- Both match -->
+      <object rdn="TestID">
+	<attr name="TestID">4</attr>
+
+	<choose>
+	  <optionally>
+	    <when test="foo">foo</when>
+	    <attr name="Matching">1</attr>
+	  </optionally>
+
+	  <optionally>
+	    <when test="bar">bar</when>
+	    <attr name="Matching">2</attr>
+	  </optionally>
+
+	  <otherwise>
+	    <attr name="Matching">3</attr>
+	  </otherwise>
+	</choose>
+      </object>
+
+
+      <!-- None match -->
+      <object rdn="TestID">
+	<attr name="TestID">5</attr>
+
+	<choose>
+	  <optionally>
+	    <when test="foo">baz</when>
+	    <attr name="Matching">1</attr>
+	  </optionally>
+
+	  <optionally>
+	    <when test="bar">baz</when>
+	    <attr name="Matching">2</attr>
+	  </optionally>
+	</choose>
+      </object>
+
+
+
+      <!-- Iterate over a list -->
+      <object rdn="TestID" list="items">
+	<attr name="TestID">6-<item/></attr>
+
+	<choose>
+	  <optionally>
+	    <when test="cat"><item/></when>
+	    <attr name="ItemType">It's a cat!</attr>
+	  </optionally>
+
+	  <optionally>
+	    <when test="dog"><item/></when>
+	    <attr name="ItemType">It's a dog!</attr>
+	  </optionally>
+
+	  <otherwise>
+	    <attr name="ItemType">It's something else!</attr>
+	  </otherwise>
+	</choose>
+      </object>
+    </object>
+  </publish>
+
+
+  <lists>
+    <list name="items">
+      <item>cat</item>
+      <item>dog</item>
+      <item>fish</item>
+    </list>
+  </lists>
+
+</xylophone>
