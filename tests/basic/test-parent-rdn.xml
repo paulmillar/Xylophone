@@ -10,35 +10,46 @@
       <attr name="o">test-organisation</attr>
 
       <object rdn="TestType">
-	<attr name="TestType">parent-rdn</attr>
+	<attr name="TestType">tests-for-parent-rdn</attr>
 
-	<object rdn="test">
-	  <attr name="test">test-1</attr>
-	  
-	  <attr name="parent-rdn"><parent-rdn use='rdn' rdn="o"/></attr>
-	</object>
-
-	
-	<object rdn="test">
-	  <attr name="test">test-2</attr>
-
-	  <attr name="parent-rdn"><parent-rdn use='value' rdn="o"/></attr>
+	<object rdn="TestID">
+	  <attr name="TestID">1</attr>
+	  <attr name="parent-rdn">
+	    <parent-rdn use='rdn' rdn="o"/>
+	  </attr>
 	</object>
 
 
-	<object rdn="test">
-	  <attr name="test">test-3</attr>
-
-	  <attr name="parent-rdn"><parent-rdn use='rdn' rdn="TestType"/></attr>
+	<object rdn="TestID">
+	  <attr name="TestID">2</attr>
+	  <attr name="parent-rdn">
+	    <parent-rdn use='value' rdn="o"/>
+	  </attr>
 	</object>
 
 
-	<object rdn="test">
-	  <attr name="test">test-4</attr>
-
-	  <attr name="parent-rdn"><parent-rdn use='value' rdn="TestType"/></attr>
+	<object rdn="TestID">
+	  <attr name="TestID">3</attr>
+	  <attr name="parent-rdn">
+	    <parent-rdn use='rdn' rdn="TestType"/>
+	  </attr>
 	</object>
 
+
+	<object rdn="TestID">
+	  <attr name="TestID">4</attr>
+	  <attr name="parent-rdn">
+	    <parent-rdn use='value' rdn="TestType"/>
+	  </attr>
+	</object>
+
+	<object rdn="TestID">
+	  <attr name="TestID">5-<parent-rdn rdn="o" use="value"/></attr>
+	</object>
+
+	<object rdn="TestID">
+	  <attr name="TestID">5-<parent-rdn rdn="TestType" use="value"/></attr>
+	</object>
       </object>
 
     </object>
