@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--+
+    |  test-1 : check the empty content works OK.
+    +-->
+
+<xylophone>
+  <publish>
+    <object rdn="o">
+      <attr name="o">test-organisation</attr>
+
+      <object rdn="TestType">
+        <attr name="TestType">parent-rdn-with-lookup</attr>
+
+	<object rdn="TestID">
+	  <attr name="TestID">1</attr>
+
+	  <object rdn="AnimalTypeID"
+		  select="/test-element/animals/*">
+	    <attr name="AnimalTypeID"><lookup path="@type-id"/></attr>
+	    <attr name="AnimalType"><lookup path="name()"/></attr>
+
+	    <object rdn="AnimalType"
+		    select="*">
+	      <attr name="AnimalType"><parent-rdn rdn="AnimalTypeID" use="value"/>-<lookup path="@type"/></attr>
+	    </object>
+	  </object>
+	</object>
+
+
+	<object rdn="TestID">
+	  <attr name="TestID">2</attr>
+
+	  <object rdn="AnimalTypeID"
+		  select="/test-element/animals/*">
+	    <attr name="AnimalTypeID"><lookup path="@type-id"/></attr>
+	    <attr name="AnimalType"><lookup path="name()"/></attr>
+	    <attr name="organisation"><parent-rdn rdn="o" use="value"/></attr>
+	  </object>
+	</object>
+
+
+
+	<object rdn="TestID">
+	  <attr name="TestID">3</attr>
+
+	  <object rdn="AnimalTypeID"
+		  select="/test-element/animals/*">
+	    <attr name="AnimalTypeID"><lookup path="@type-id"/></attr>
+	    <attr name="AnimalType"><lookup path="name()"/></attr>
+
+	    <object rdn="ParentID" select="..">
+		<attr name="ParentID"><parent-rdn rdn="TestID" use="value"/></attr>
+	    </object>
+	  </object>
+	</object>
+      </object>
+    </object>
+  </publish>
+</xylophone>

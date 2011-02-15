@@ -1,0 +1,118 @@
+dn: o=test-organisation
+o: test-organisation
+
+dn: TestType=parent-rdn-with-lookup,o=test-organisation
+TestType: parent-rdn-with-lookup
+
+dn: TestID=1,TestType=parent-rdn-with-lookup,o=test-organisation
+TestID: 1
+
+dn: AnimalTypeID=1,TestID=1,TestType=parent-rdn-with-lookup,o=test-organisa
+ tion
+AnimalTypeID: 1
+AnimalType: birds
+
+dn: AnimalType=1-Norwegian-blue,AnimalTypeID=1,TestID=1,TestType=parent-rdn
+ -with-lookup,o=test-organisation
+AnimalType: 1-Norwegian-blue
+
+dn: AnimalTypeID=2,TestID=1,TestType=parent-rdn-with-lookup,o=test-organisa
+ tion
+AnimalTypeID: 2
+AnimalType: fish
+
+dn: AnimalType=2-goldfish,AnimalTypeID=2,TestID=1,TestType=parent-rdn-with-
+ lookup,o=test-organisation
+AnimalType: 2-goldfish
+
+dn: AnimalType=2-carp,AnimalTypeID=2,TestID=1,TestType=parent-rdn-with-look
+ up,o=test-organisation
+AnimalType: 2-carp
+
+dn: AnimalTypeID=3,TestID=1,TestType=parent-rdn-with-lookup,o=test-organisa
+ tion
+AnimalTypeID: 3
+AnimalType: mammals
+
+dn: AnimalType=3-cat,AnimalTypeID=3,TestID=1,TestType=parent-rdn-with-looku
+ p,o=test-organisation
+AnimalType: 3-cat
+
+dn: AnimalType=3-dog,AnimalTypeID=3,TestID=1,TestType=parent-rdn-with-looku
+ p,o=test-organisation
+AnimalType: 3-dog
+
+dn: AnimalTypeID=4,TestID=1,TestType=parent-rdn-with-lookup,o=test-organisa
+ tion
+AnimalTypeID: 4
+AnimalType: reptiles
+
+dn: AnimalType=4-snake,AnimalTypeID=4,TestID=1,TestType=parent-rdn-with-loo
+ kup,o=test-organisation
+AnimalType: 4-snake
+
+dn: TestID=2,TestType=parent-rdn-with-lookup,o=test-organisation
+TestID: 2
+
+dn: AnimalTypeID=1,TestID=2,TestType=parent-rdn-with-lookup,o=test-organisa
+ tion
+AnimalTypeID: 1
+AnimalType: birds
+organisation: test-organisation
+
+dn: AnimalTypeID=2,TestID=2,TestType=parent-rdn-with-lookup,o=test-organisa
+ tion
+AnimalTypeID: 2
+AnimalType: fish
+organisation: test-organisation
+
+dn: AnimalTypeID=3,TestID=2,TestType=parent-rdn-with-lookup,o=test-organisa
+ tion
+AnimalTypeID: 3
+AnimalType: mammals
+organisation: test-organisation
+
+dn: AnimalTypeID=4,TestID=2,TestType=parent-rdn-with-lookup,o=test-organisa
+ tion
+AnimalTypeID: 4
+AnimalType: reptiles
+organisation: test-organisation
+
+dn: TestID=3,TestType=parent-rdn-with-lookup,o=test-organisation
+TestID: 3
+
+dn: AnimalTypeID=1,TestID=3,TestType=parent-rdn-with-lookup,o=test-organisa
+ tion
+AnimalTypeID: 1
+AnimalType: birds
+
+dn: ParentID=3,AnimalTypeID=1,TestID=3,TestType=parent-rdn-with-lookup,o=te
+ st-organisation
+ParentID: 3
+
+dn: AnimalTypeID=2,TestID=3,TestType=parent-rdn-with-lookup,o=test-organisa
+ tion
+AnimalTypeID: 2
+AnimalType: fish
+
+dn: ParentID=3,AnimalTypeID=2,TestID=3,TestType=parent-rdn-with-lookup,o=te
+ st-organisation
+ParentID: 3
+
+dn: AnimalTypeID=3,TestID=3,TestType=parent-rdn-with-lookup,o=test-organisa
+ tion
+AnimalTypeID: 3
+AnimalType: mammals
+
+dn: ParentID=3,AnimalTypeID=3,TestID=3,TestType=parent-rdn-with-lookup,o=te
+ st-organisation
+ParentID: 3
+
+dn: AnimalTypeID=4,TestID=3,TestType=parent-rdn-with-lookup,o=test-organisa
+ tion
+AnimalTypeID: 4
+AnimalType: reptiles
+
+dn: ParentID=3,AnimalTypeID=4,TestID=3,TestType=parent-rdn-with-lookup,o=te
+ st-organisation
+ParentID: 3
