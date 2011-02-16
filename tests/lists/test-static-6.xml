@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<xylophone>
+  <publish>
+    <object rdn="outerItem" hidden="1" list="items-outer">
+      <attr name="outerItem"><item/></attr>
+
+      <object rdn="innerItem">
+	<attr name="innerItem">item</attr>
+
+	<attr name="outerItem">
+	  <parent-rdn rdn="outerItem" use="value"/>
+	</attr>
+      </object>
+    </object>
+  </publish>
+
+  <lists>
+    <list name="items-outer">
+      <item>Foo</item>
+      <item>Bar</item>
+      <item>Baz</item>
+    </list>
+  </lists>
+</xylophone>

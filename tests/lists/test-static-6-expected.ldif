@@ -1,0 +1,11 @@
+dn: innerItem=item,outerItem=Foo
+innerItem: item
+outerItem: Foo
+
+dn: innerItem=item,outerItem=Bar
+innerItem: item
+outerItem: Bar
+
+dn: innerItem=item,outerItem=Baz
+innerItem: item
+outerItem: Baz
