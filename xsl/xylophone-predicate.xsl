@@ -184,7 +184,7 @@
 
 
       <xsl:otherwise>
-	<xsl:message>Unknown mode attribute: <xsl:value-of select="@mode"/> in <xsl:value-of select="name()"/> element.</xsl:message>
+	<xsl:message>Unknown @check value '<xsl:value-of select="@check"/>' in <xsl:value-of select="name()"/> element.</xsl:message>
 	<xsl:value-of select="false()"/>
       </xsl:otherwise>
 
