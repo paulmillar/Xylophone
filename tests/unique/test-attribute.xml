@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+
+<xylophone>
+  <publish>
+
+    <object rdn="o" hidden="1">
+      <attr name="o">test-organisation</attr>
+
+      <object rdn="TestType" hidden="1">
+        <attr name="TestType">unique-with-map</attr>
+
+	<!-- Test three values when we eliminate one of them via a map -->
+        <object rdn="TestID">
+          <attr name="TestID">1</attr>
+
+	  <attr name="unit"
+		select="/units/unit">
+	    <unique>
+	      <map name="unit-to-official-name-1">
+		<lookup path="@name"/>
+	      </map>
+	    </unique>
+
+	    <map name="unit-to-official-name-1">
+	      <lookup path="@name"/>
+	    </map> - <lookup path="@name"/>
+	  </attr>
+	</object>
+
+
+	<!-- Test three values when we eliminate one of them via a map -->
+        <object rdn="TestID">
+          <attr name="TestID">2</attr>
+
+	  <attr name="unit"
+		select="/units/unit">
+	    <unique>
+	      <map name="unit-to-official-name-2">
+		<lookup path="@name"/>
+	      </map>
+	    </unique>
+
+	    <map name="unit-to-official-name-2">
+	      <lookup path="@name"/>
+	    </map> - <lookup path="@name"/>
+	  </attr>
+	</object>
+
+      </object>
+    </object>
+  </publish>
+
+  <mapping>
+    <map name="unit-to-official-name-1">
+      <sub match="unit 1" replace-with="marketing"/>
+      <sub match="unit 2" replace-with="finance"/>
+      <sub match="unit 3" replace-with="marketing"/>
+    </map>
+
+    <map name="unit-to-official-name-2">
+      <sub match="unit 1" replace-with="marketing"/>
+      <sub match="unit 2" replace-with="marketing"/>
+      <sub match="unit 3" replace-with="finance"/>
+    </map>
+  </mapping>
+</xylophone>

@@ -1,0 +1,9 @@
+dn: TestID=1,TestType=unique-with-map,o=test-organisation
+TestID: 1
+unit: marketing - unit 1
+unit: finance - unit 2
+
+dn: TestID=2,TestType=unique-with-map,o=test-organisation
+TestID: 2
+unit: marketing - unit 1
+unit: finance - unit 3

@@ -1,0 +1,10 @@
+dn: TestID=1,TestType=unique-with-map,o=test-organisation
+TestID: 1
+
+dn: ou=Publishing,TestID=1,TestType=unique-with-map,o=test-organisation
+ou: Publishing
+manager: Fred Flintstone
+
+dn: ou=Sales,TestID=1,TestType=unique-with-map,o=test-organisation
+ou: Sales
+manager: Andrew Simons
