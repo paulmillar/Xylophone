@@ -10,3 +10,17 @@ TestID: 3
 
 dn: FooID=42,TestID=3,o=test organisation
 FooID: 42
+
+dn: TestID=4,o=test organisation
+TestID: 4
+FooID: 42
+
+dn: TestID=5,o=test organisation
+TestID: 5
+
+dn: TestID=6,o=test organisation
+TestID: 6
+
+dn: TestID=7,o=test organisation
+TestID: 7
+FooID: 42

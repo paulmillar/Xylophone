@@ -40,6 +40,45 @@
 	</optionally>
       </object>
 
+
+      <object rdn="TestID">
+	<attr name="TestID">4</attr>
+
+	<optionally>
+	  <when check="empty"></when>
+	  <attr name="FooID">42</attr>
+	</optionally>
+      </object>
+
+
+      <object rdn="TestID">
+	<attr name="TestID">5</attr>
+
+	<optionally>
+	  <when check="empty">something</when>
+	  <attr name="FooID">42</attr>
+	</optionally>
+      </object>
+
+      <object rdn="TestID">
+	<attr name="TestID">6</attr>
+
+	<optionally>
+	  <when check="not-empty"></when>
+	  <attr name="FooID">42</attr>
+	</optionally>
+      </object>
+
+
+      <object rdn="TestID">
+	<attr name="TestID">7</attr>
+
+	<optionally>
+	  <when check="not-empty">something</when>
+	  <attr name="FooID">42</attr>
+	</optionally>
+      </object>
+
     </object>
   </publish>
 
