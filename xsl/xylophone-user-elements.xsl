@@ -56,6 +56,8 @@
                 extension-element-prefixes="exsl date">
 
 <xsl:include href="date.format-date.function.xsl"/>
+<xsl:include href="date.add.function.xsl"/>
+<xsl:include href="date.duration.function.xsl"/>
 
 <!--+
     |
@@ -540,7 +542,11 @@
       <xsl:message>Unable to generate timestamp: tz attribute (<xsl:value-of select='@tz'/>) not 'Z' or 'local'</xsl:message>
     </xsl:when>
 
-    <xsl:when test="@tz = 'Z'">
+    <xsl:when test="@tz = 'local'">
+      <xsl:value-of select="date:format-date(date:date-time(), @format)" />
+    </xsl:when>
+
+    <xsl:otherwise>
       <xsl:variable name="tz" select="substring(date:time(),9)"/>
       <xsl:variable name="sign">
 	<xsl:choose>
@@ -548,11 +554,7 @@
 	  <xsl:otherwise>-1</xsl:otherwise>
 	</xsl:choose>
       </xsl:variable>
-      <xsl:value-of select="date:format-date(date:add(date:date-time(), date:duration((floor(substring($tz,2,2))*60+floor(substring($tz,5,2)))*60*number($sign))), @format)" />
-    </xsl:when>
-
-    <xsl:otherwise>
-      <xsl:value-of select="date:format-date(date:date-time(), @format)" />
+      <xsl:value-of select="date:format-date(concat(substring(date:add(date:date-time(), date:duration((floor(substring($tz,2,2))*60+floor(substring($tz,5,2)))*60*number($sign))),1,19),'Z'), @format)" />
     </xsl:otherwise>
   </xsl:choose>
 </xsl:template>

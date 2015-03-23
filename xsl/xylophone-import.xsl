@@ -48,7 +48,6 @@
                 xmlns:dyn="http://exslt.org/dynamic"
                 xmlns:saxon655="http://icl.com/saxon"
                 xmlns:saxon9="http://saxon.sf.net/"
-		xmlns:example="http://example.org/SCHEMA/2010/01"
 		xmlns:d="http://www.dcache.org/2008/01/Info"
                 extension-element-prefixes="dyn saxon9 saxon655">
 

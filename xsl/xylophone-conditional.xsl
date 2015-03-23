@@ -178,7 +178,7 @@
 	<xsl:with-param name="list-item" select="$list-item"/>
       </xsl:apply-templates>
     </xsl:when>
-  </xsl:choose>  
+  </xsl:choose>
 </xsl:template>
 
 
@@ -240,7 +240,7 @@
 	<xsl:with-param name="parent-dn" select="$parent-dn"/>
       </xsl:apply-templates>
     </xsl:when>
-  </xsl:choose>  
+  </xsl:choose>
 </xsl:template>
 
 

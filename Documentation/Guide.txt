@@ -1746,4 +1746,4 @@ Here are some examples:
 
 The tz attribute is either 'Z' or 'local' or missing.  If 'Z' then the
 current time is expressed in 'zulu time' (UTC), if 'local' then it is
-expressed in the local timezone, if missing 'local' is assumed.
+expressed in the local timezone, if missing then 'Z' is assumed.
